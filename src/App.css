@@ -1,0 +1,98 @@
+#root {
+  font-family: "Special Elite", system-ui;
+  max-width: 1280px;
+  width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 5em;
+  background-color: rgba(164, 212, 164, 0.262);
+  color: rgba(51, 57, 65, 0.667);
+}
+
+/* .logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+} */
+
+.button {
+  font-weight: bold;
+  color: #643927aa;
+  background-color: rgb(180, 219, 245);
+}
+.button:hover {
+  font-weight: bold;
+  color: whitesmoke;
+  border-color: rgb(126, 221, 218);
+  background-color: rgb(130, 180, 213);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+/* .special-elite-regular {
+  font-family: "Special Elite", system-ui;
+  font-weight: 400;
+  font-style: normal;
+} */
+
+.input {
+  font-family: "Special Elite", system-ui;
+  width: 20em;
+  height: 5em;
+  border-radius: 1em;
+  text-align: center;
+  border-style: none;
+  background-color: #f2babaa2;
+  color: #643927c3;
+  font-weight: bold;
+  font-size: medium;
+}
+
+.form {
+  max-width: 1280px;
+  max-height: fit-content;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 5em;
+  background-color: rgb(255, 241, 196);
+  color: #643927aa;
+}
+
+.dropdownmenu {
+  font-family: "Special Elite", system-ui;
+  width: 20em;
+  height: 3em;
+  border-radius: 1em;
+  text-align: center;
+  border-style: none;
+  background-color: #ffffffaa;
+  color: #643927aa;
+  text-align: center;
+  font-size: medium;
+}
