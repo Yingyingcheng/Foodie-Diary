@@ -9,7 +9,7 @@ function App() {
   return (
     <>
       <h1>My FOODIE DIARY</h1>
-      <p>What you eat today...🥑🥑</p>
+      <p>What you eat today...🥑</p>
       <form
         className="form"
         onSubmit={(e) => {
