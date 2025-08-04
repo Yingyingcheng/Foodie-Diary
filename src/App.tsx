@@ -29,6 +29,7 @@ function App() {
   //   );
   // }
 
+  // need to define food type using food: Food
   function handleEditClick(food: Food) {
     setInputValue(food.name);
     setSelectedMeal(food.meal);
@@ -134,6 +135,7 @@ function App() {
         <button className="button">Submit</button>
       </form>
 
+      {/* Cannot with 2 components  needs <> or <div>*/}
       <div className="scroll">
         {foods.map((food) => (
           <div style={{ display: "flex", gap: 4 }}>
