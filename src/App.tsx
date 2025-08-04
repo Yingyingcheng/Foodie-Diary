@@ -13,8 +13,9 @@ type Food = {
 function App() {
   const [foods, setFoods] = useState<Food[]>([]); //Food array
   const [inputValue, setInputValue] = useState("");
-  const [selectedMeal, setSelectedMeal] = useState("Breakfast"); // Declare a state variable...
-  const [selectedPlace, setSelectedPlace] = useState("Cafe"); // Declare a state variable...
+  const [selectedMeal, setSelectedMeal] = useState("BREAKFAST"); // Declare a state variable...
+  const [selectedPlace, setSelectedPlace] = useState("CAFE"); // Declare a state variable...
+  const [edittingId, setEdittingId] = useState<number | null>(null);
 
   // function handleChangeFood(newfood: Food) {
   //   setFoods(
@@ -28,6 +29,49 @@ function App() {
   //   );
   // }
 
+  function handleEditClick(food: Food) {
+    setInputValue(food.name);
+    setSelectedMeal(food.meal);
+    setSelectedPlace(food.place);
+    setEdittingId(food.id);
+  }
+
+  function handleEdittingSubmit() {
+    setFoods(
+      foods.map((food) => {
+        if (food.id === edittingId) {
+          return {
+            id: edittingId,
+            name: inputValue,
+            meal: selectedMeal,
+            place: selectedPlace,
+          };
+        } else {
+          return food;
+        }
+      })
+    );
+  }
+
+  function handleNewRecordSubmit() {
+    setFoods([
+      ...foods,
+      {
+        id: nextId++,
+        name: inputValue,
+        meal: selectedMeal,
+        place: selectedPlace,
+      },
+    ]);
+  }
+
+  function resetForm() {
+    setInputValue("");
+    setSelectedMeal("BREAKFAST");
+    setSelectedPlace("CAFE");
+    setEdittingId(null);
+  }
+
   return (
     <>
       <h1>My FOODIE DIARY</h1>
@@ -36,18 +80,19 @@ function App() {
         className="form"
         onSubmit={(e) => {
           e.preventDefault();
-          setFoods([
-            ...foods,
-            {
-              id: nextId++,
-              name: inputValue,
-              meal: selectedMeal,
-              place: selectedPlace,
-            },
-          ]);
-          setInputValue("");
+          if (edittingId !== null) {
+            handleEdittingSubmit();
+          } else {
+            handleNewRecordSubmit();
+          }
+          resetForm();
         }}
       >
+        <h2>
+          {edittingId !== null
+            ? `Currently editting ${edittingId}`
+            : "Let's create a new record"}
+        </h2>
         <select
           className="dropdownmenu"
           value={selectedMeal}
@@ -91,9 +136,12 @@ function App() {
 
       <div className="scroll">
         {foods.map((food) => (
-          <h3 className="h3">
-            Your {food.meal} diary : {food.name} in {food.place} today!
-          </h3>
+          <div style={{ display: "flex", gap: 4 }}>
+            <h3 className="h3">
+              Your {food.meal} diary : {food.name} in {food.place} today!
+            </h3>
+            <button onClick={() => handleEditClick(food)}>edit</button>
+          </div>
         ))}
       </div>
     </>
