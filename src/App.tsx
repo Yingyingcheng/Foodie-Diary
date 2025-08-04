@@ -1,11 +1,33 @@
 import { useState } from "react";
 import "./App.css";
 
+let nextId = 0;
+
+type Food = {
+  id: number;
+  name: string;
+  meal: string;
+  place: string;
+};
+
 function App() {
+  const [foods, setFoods] = useState<Food[]>([]); //Food array
   const [inputValue, setInputValue] = useState("");
-  const [foodNames, setFoodNames] = useState<string[]>([]);
   const [selectedMeal, setSelectedMeal] = useState("Breakfast"); // Declare a state variable...
   const [selectedPlace, setSelectedPlace] = useState("Cafe"); // Declare a state variable...
+
+  // function handleChangeFood(newfood: Food) {
+  //   setFoods(
+  //     foods.map((food) => {
+  //       if (food.id === newfood.id) {
+  //         return newfood;
+  //       } else {
+  //         return food;
+  //       }
+  //     })
+  //   );
+  // }
+
   return (
     <>
       <h1>My FOODIE DIARY</h1>
@@ -14,9 +36,14 @@ function App() {
         className="form"
         onSubmit={(e) => {
           e.preventDefault();
-          setFoodNames((prev) => [
-            ...prev,
-            ` ${selectedMeal} : ${inputValue} in ${selectedPlace}`,
+          setFoods([
+            ...foods,
+            {
+              id: nextId++,
+              name: inputValue,
+              meal: selectedMeal,
+              place: selectedPlace,
+            },
           ]);
           setInputValue("");
         }}
@@ -62,9 +89,11 @@ function App() {
         <button className="button">Submit</button>
       </form>
 
-      <div style={{ maxHeight: 160, overflowY: "scroll" }}>
-        {foodNames.map((food) => (
-          <h3 className="h3">You ate {food} today!</h3>
+      <div className="scroll">
+        {foods.map((food) => (
+          <h3 className="h3">
+            Your {food.meal} diary : {food.name} in {food.place} today!
+          </h3>
         ))}
       </div>
     </>

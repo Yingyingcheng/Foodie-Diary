@@ -96,3 +96,8 @@
   text-align: center;
   font-size: medium;
 }
+
+.scroll {
+  max-height: 160px;
+  overflow-y: auto;
+}
