@@ -13,8 +13,10 @@ type Food = {
 function App() {
   const [foods, setFoods] = useState<Food[]>([]); //Food array
   const [inputValue, setInputValue] = useState("");
-  const [selectedMeal, setSelectedMeal] = useState("Breakfast"); // Declare a state variable...
-  const [selectedPlace, setSelectedPlace] = useState("Cafe"); // Declare a state variable...
+  const [selectedMeal, setSelectedMeal] = useState("BREAKFAST"); // Declare a state variable...
+  const [selectedPlace, setSelectedPlace] = useState("CAFE"); // Declare a state variable...
+  const [isEditingId, setIsEditingId] = useState<number | null>(null);
+  // const [isDeletingId, setIsDeletingId] = useState<number | null>(null);
 
   // function handleChangeFood(newfood: Food) {
   //   setFoods(
@@ -28,6 +30,60 @@ function App() {
   //   );
   // }
 
+  function handleEditClick(food: Food) {
+    setInputValue(food.name);
+    setSelectedMeal(food.meal);
+    setSelectedPlace(food.place);
+    setIsEditingId(food.id);
+  }
+
+  // function handleDeleteClick(food: Food) {
+  //   setInputValue(food.name);
+  //   setSelectedMeal(food.meal);
+  //   setSelectedPlace(food.place);
+  //   setIsDeletingId(food.id);
+  // }
+
+  function handleEditSubmit() {
+    setFoods(
+      foods.map((food) => {
+        if (food.id === isEditingId) {
+          return {
+            id: isEditingId,
+            name: inputValue,
+            meal: selectedMeal,
+            place: selectedPlace,
+          };
+        } else {
+          return food;
+        }
+      })
+    );
+  }
+
+  function handleDelete(isDeletingId: number) {
+    setFoods(foods.filter((food) => food.id !== isDeletingId));
+  }
+
+  function handleNewSubmit() {
+    setFoods([
+      ...foods,
+      {
+        id: nextId++,
+        name: inputValue,
+        meal: selectedMeal,
+        place: selectedPlace,
+      },
+    ]);
+  }
+
+  function handleResetForm() {
+    setInputValue("");
+    setSelectedMeal("BREAKFAST");
+    setSelectedPlace("CAFE");
+    setIsEditingId(null);
+  }
+
   return (
     <>
       <h1>My FOODIE DIARY</h1>
@@ -36,18 +92,21 @@ function App() {
         className="form"
         onSubmit={(e) => {
           e.preventDefault();
-          setFoods([
-            ...foods,
-            {
-              id: nextId++,
-              name: inputValue,
-              meal: selectedMeal,
-              place: selectedPlace,
-            },
-          ]);
-          setInputValue("");
+          if (isEditingId !== null) {
+            handleEditSubmit();
+            alert(`You succesfully edit your foodie diary!`);
+          } else {
+            handleNewSubmit();
+          }
+          handleResetForm();
         }}
       >
+        <h2>
+          {isEditingId !== null
+            ? `You are now editting your dairy!`
+            : `Write your new foodie dairy now!`}
+        </h2>
+
         <select
           className="dropdownmenu"
           value={selectedMeal}
@@ -91,9 +150,32 @@ function App() {
 
       <div className="scroll">
         {foods.map((food) => (
-          <h3 className="h3">
-            Your {food.meal} diary : {food.name} in {food.place} today!
-          </h3>
+          <div className="edit">
+            <br />
+            <h3>
+              🦁 Your {food.meal} diary 🍣
+              <br />
+              {food.name} in {food.place} today!
+            </h3>
+            <button
+              className="editbutton"
+              onClick={() => {
+                handleEditClick(food);
+              }}
+            >
+              🍒 EDIT
+            </button>
+            <button
+              className="deletebutton"
+              onClick={() => {
+                alert(`Do you wanna delete this foodie record?`);
+                handleDelete(food.id);
+                alert(`You succesfully delete this foodie record!`);
+              }}
+            >
+              🍋 DELETE
+            </button>
+          </div>
         ))}
       </div>
     </>

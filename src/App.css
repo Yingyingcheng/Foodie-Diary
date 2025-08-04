@@ -93,7 +93,6 @@
   border-style: none;
   background-color: #ffffffaa;
   color: #643927aa;
-  text-align: center;
   font-size: medium;
 }
 
@@ -101,3 +100,34 @@
   max-height: 160px;
   overflow-y: auto;
 }
+
+.edit {
+  font-weight: bold;
+  color: #643927aa;
+  display: flex;
+  justify-content: center;
+}
+
+.editbutton {
+  color: #392218aa;
+  background-color: rgb(215, 229, 239);
+  font-size: small;
+  padding: 10px;
+  margin-top: 20px;
+  margin-left: 20px;
+  max-height: fit-content;
+}
+
+.deletebutton {
+  color: #392218aa;
+  background-color: rgb(239, 215, 239);
+  font-size: small;
+  padding: 10px;
+  margin-top: 20px;
+  margin-left: 20px;
+  max-height: fit-content;
+}
+
+/* .h3 {
+  font-weight: bold;
+} */
