@@ -86,7 +86,7 @@ function App() {
 
   return (
     <>
-      <h1>My FOODIE DIARY</h1>
+      <h1>FOODIE DIARY</h1>
       <p>What you eat today...🥑</p>
       <form
         className="form"
@@ -106,6 +106,14 @@ function App() {
             ? `You are now editting your dairy!`
             : `Write your new foodie dairy now!`}
         </h2>
+
+        <label>NOW is ...</label>
+
+        <input
+          className="calendar"
+          type="datetime-local"
+          id="Test_DatetimeLocal"
+        />
 
         <select
           className="dropdownmenu"

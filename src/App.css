@@ -131,3 +131,10 @@
 /* .h3 {
   font-weight: bold;
 } */
+
+.calendar {
+  background-color: #efd9ae9d;
+  margin-bottom: 20px;
+  border: #f2babaa2;
+  border-radius: 5rem;
+}
