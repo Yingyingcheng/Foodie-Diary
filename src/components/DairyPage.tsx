@@ -5,8 +5,12 @@ import { Link } from "react-router";
 
 let nextId = 0;
 
-export function Diary() {
-  const [foods, setFoods] = useState<Food[]>([]); //Food array
+type DiaryInputProps = {
+  foods: Food[];
+  setFoods: React.Dispatch<React.SetStateAction<Food[]>>;
+};
+
+export function Diary({ foods, setFoods }: DiaryInputProps) {
   const [inputValue, setInputValue] = useState("");
   const [selectedMeal, setSelectedMeal] = useState("BREAKFAST"); // Declare a state variable...
   const [selectedPlace, setSelectedPlace] = useState("CAFE"); // Declare a state variable...

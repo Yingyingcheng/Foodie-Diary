@@ -5,7 +5,11 @@ import type { Food } from "./../type";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export function Calendar() {
+type CalendarInputProps = {
+  foods: Food[];
+};
+
+export function Calendar({ foods }: CalendarInputProps) {
   return (
     <div className="calendarhead">
       <h1>Calendar Memory</h1>
@@ -32,6 +36,21 @@ export function Calendar() {
         onChange={handleDateChange}
         dateFormat="MM/dd/yyyy"
       /> */}
+      <div
+        className="scroll"
+        style={{ backgroundColor: "white", opacity: 0.8, borderRadius: 10 }}
+      >
+        {foods.map((food) => (
+          <div className="edit">
+            <br />
+            <h3>
+              Your {food.meal} diary
+              <br />
+              {food.name} in {food.place} today!
+            </h3>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
