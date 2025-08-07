@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-datepicker": "^8.4.0",
+    "react-day-picker": "^9.8.1",
+    "react-dom": "^19.1.0",
+    "react-router": "^7.7.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

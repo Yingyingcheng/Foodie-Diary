@@ -1,0 +1,23 @@
+.home {
+  font-family: "Special Elite", system-ui;
+  padding: 2rem;
+  border-radius: 5em;
+  font-weight: bold;
+  background-image: url(avocado1.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  max-width: 1000px;
+  height: 600px;
+  margin: 0 auto;
+  text-align: center;
+  justify-content: center;
+}
+
+button:hover {
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  background-color: rgb(96, 45, 20);
+  cursor: pointer;
+  transition: none;
+}
