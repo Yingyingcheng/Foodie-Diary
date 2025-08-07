@@ -9,7 +9,7 @@ export function Calendar() {
   return (
     <div className="calendarhead">
       <h1>Calendar Memory</h1>
-      <p>Share your dairy with friends...🍒</p>
+      <p>Share your diary with friends...🍒</p>
       <Link to="/diary">
         <button>Foodie Diary</button>
       </Link>{" "}
@@ -27,11 +27,6 @@ export function Calendar() {
       <Link to="/plan">
         <button>Set Your Goals</button>
       </Link>
-      {/* <DatePicker
-        selected={selectedDate}
-        onChange={handleDateChange}
-        dateFormat="MM/dd/yyyy"
-      /> */}
     </div>
   );
 }
