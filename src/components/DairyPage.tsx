@@ -41,7 +41,7 @@ export function Diary() {
             name: inputValue,
             meal: selectedMeal,
             place: selectedPlace,
-            date: selectedDate,
+            // date: selectedDate,
           };
         } else {
           return food;

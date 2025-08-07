@@ -3,5 +3,5 @@ export type Food = {
   name: string;
   meal: string;
   place: string;
-  date: Date;
+  date?: Date;
 };
