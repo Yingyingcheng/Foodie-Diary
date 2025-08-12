@@ -1,9 +1,9 @@
 import { useState } from "react";
 import "./../App.css";
 import type { Food } from "../type";
-import { Link } from "react-router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { PageLayout } from "./PageLayout";
 
 let nextId = 0;
 
@@ -18,18 +18,6 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
   const [selectedPlace, setSelectedPlace] = useState("CAFE"); // Declare a state variable...
   const [selectedDate, setSelectedDate] = useState<Food["date"]>(new Date());
   const [isEditingId, setIsEditingId] = useState<number | null>(null);
-
-  // function handleChangeFood(newfood: Food) {
-  //   setFoods(
-  //     foods.map((food) => {
-  //       if (food.id === newfood.id) {
-  //         return newfood;
-  //       } else {
-  //         return food;
-  //       }
-  //     })
-  //   );
-  // }
 
   function handleEditClick(food: Food) {
     setInputValue(food.name);
@@ -87,126 +75,109 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
   }
 
   return (
-    <>
-      <div className="diaryhead">
-        <h1>FOODIE DIARY</h1>
-        <p>What you eat today...🍋</p>
-        <Link to="/diary">
-          <button
-            disabled
-            style={{
-              backgroundColor: " rgb(205, 176, 129)",
-              color: "white",
-            }}
-          >
-            Foodie Diary
-          </button>
-        </Link>{" "}
-        <Link to="/calendar">
-          <button>Calendar Memory</button>
-        </Link>{" "}
-        <Link to="/plan">
-          <button>Set Your Goals</button>
-        </Link>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (isEditingId !== null) {
-              handleEditSubmit();
-              alert(`You succesfully edit your foodie diary!`);
-            } else {
-              handleNewSubmit();
-            }
-            handleResetForm();
-          }}
-        >
-          <h2>
-            {isEditingId !== null
-              ? `You are now editting your diary!`
-              : `Write your foodie diary now!`}
-          </h2>
+    <PageLayout
+      title="FOODIE DIARY"
+      subtitle="What you eat today...🍋"
+      backgroundImage="url(lemon.png)"
+    >
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (isEditingId !== null) {
+            handleEditSubmit();
+            alert(`You succesfully edit your foodie diary!`);
+          } else {
+            handleNewSubmit();
+          }
+          handleResetForm();
+        }}
+      >
+        <h2>
+          {isEditingId !== null
+            ? `You are now editting your diary!`
+            : `Write your foodie diary now!`}
+        </h2>
 
-          <label>
-            NOW is ...
-            {/* <input
+        <label>
+          NOW is ...
+          {/* <input
               
               type="datetime-local"
               id="Test_DatetimeLocal"
             /> */}
-            <DatePicker
-              className="calendar"
-              showIcon
-              selected={selectedDate}
-              onChange={handleSelectDate}
-            />
-          </label>
-          <select
-            className="dropdownmenu"
-            value={selectedMeal}
-            onChange={(e) => {
-              setSelectedMeal(e.target.value);
-            }}
-          >
-            <option value="BREAKFAST">BREAKFAST</option>
-            <option value="LUNCH">LUNCH</option>
-            <option value="BRUNCH">BRUNCH</option>
-            <option value="DINNER">DINNER</option>
-            <option value="SNACK">SNACK</option>
-          </select>
-
-          <select
-            className="dropdownmenu"
-            value={selectedPlace}
-            onChange={(e) => {
-              setSelectedPlace(e.target.value);
-            }}
-          >
-            <option value="CAFE">CAFE</option>
-            <option value="RESTAURANT">RESTAURANT</option>
-            <option value="HOME SWEET HOME">HOME SWEET HOME</option>
-          </select>
-          <input
-            className="textarea"
-            value={inputValue}
-            placeholder="Write it down...🥨"
-            onChange={(e) => setInputValue(e.target.value)}
+          <DatePicker
+            className="calendar"
+            showIcon
+            selected={selectedDate}
+            onChange={handleSelectDate}
           />
+        </label>
+        <select
+          className="dropdownmenu"
+          value={selectedMeal}
+          onChange={(e) => {
+            setSelectedMeal(e.target.value);
+          }}
+        >
+          <option value="BREAKFAST">BREAKFAST</option>
+          <option value="LUNCH">LUNCH</option>
+          <option value="BRUNCH">BRUNCH</option>
+          <option value="DINNER">DINNER</option>
+          <option value="SNACK">SNACK</option>
+        </select>
 
-          <button className="submit">Submit</button>
-        </form>
-        <div className="scroll">
-          {foods.map((food) => (
-            <div className="edit">
-              <ul>
-                <li>
-                  {food.date ? `📅 ${food.date.toDateString()}` : ""} ☕{" "}
-                  {food.meal}
-                  <br />
-                  {food.name} in {food.place} today!
-                </li>
-              </ul>
-              <button
-                className="editbutton"
-                onClick={() => {
-                  handleEditClick(food);
-                }}
-              >
-                EDIT
-              </button>
-              <button
-                className="deletebutton"
-                onClick={() => {
-                  alert(`Do you wanna delete this foodie record?`);
-                  handleDelete(food.id);
-                  alert(`You succesfully delete this foodie record!`);
-                }}
-              >
-                DELETE
-              </button>
-            </div>
-          ))}
-        </div>
+        <select
+          className="dropdownmenu"
+          value={selectedPlace}
+          onChange={(e) => {
+            setSelectedPlace(e.target.value);
+          }}
+        >
+          <option value="CAFE">CAFE</option>
+          <option value="RESTAURANT">RESTAURANT</option>
+          <option value="HOME SWEET HOME">HOME SWEET HOME</option>
+        </select>
+        <input
+          className="textarea"
+          value={inputValue}
+          placeholder="Write it down...🥨"
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+
+        <button className="submit">Submit</button>
+      </form>
+      <div className="scroll">
+        {foods.map((food) => (
+          <div className="edit">
+            <ul>
+              <li>
+                {food.date ? `📅 ${food.date.toDateString()}` : ""} ☕{" "}
+                {food.meal}
+                <br />
+                {food.name} in {food.place} today!
+              </li>
+            </ul>
+            <button
+              className="editbutton"
+              onClick={() => {
+                handleEditClick(food);
+              }}
+            >
+              EDIT
+            </button>
+            <button
+              className="deletebutton"
+              onClick={() => {
+                alert(`Do you wanna delete this foodie record?`);
+                handleDelete(food.id);
+                alert(`You succesfully delete this foodie record!`);
+              }}
+            >
+              DELETE
+            </button>
+          </div>
+        ))}
       </div>
-    </>
+    </PageLayout>
   );
 }

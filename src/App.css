@@ -100,3 +100,24 @@ form {
   background-color: #ffffffaa;
   border-color: #ffffffaa;
 }
+
+.navlink.active > button {
+  background-color: rgb(205, 176, 129);
+  color: "white";
+}
+
+.page-head {
+  font-family: "Special Elite", system-ui;
+  padding: 2rem;
+  border-radius: 5em;
+  font-weight: bold;
+  opacity: 0.9;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  max-width: 1000px;
+  height: 600px;
+  margin: 0 auto;
+  text-align: center;
+  justify-content: center;
+}

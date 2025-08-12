@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { Link } from "react-router";
+import { PageLayout } from "./PageLayout";
 import "./../CalendarPage.css";
 import type { Food } from "./../type";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 type CalendarInputProps = {
@@ -12,26 +10,11 @@ type CalendarInputProps = {
 
 export function Calendar({ foods, setFoods }: CalendarInputProps) {
   return (
-    <div className="calendarhead">
-      <h1>Calendar Memory</h1>
-      <p>Share your diary with friends...🍒</p>
-      <Link to="/diary">
-        <button>Foodie Diary</button>
-      </Link>{" "}
-      <Link to="/calendar">
-        <button
-          disabled
-          style={{
-            backgroundColor: " rgb(205, 176, 129)",
-            color: "white",
-          }}
-        >
-          Calendar Memory
-        </button>
-      </Link>{" "}
-      <Link to="/plan">
-        <button>Set Your Goals</button>
-      </Link>
+    <PageLayout
+      title="Calendar Memory"
+      subtitle="Share your diary with friends...🍒"
+      backgroundImage="url(cherry1.png)"
+    >
       <div className="scroll">
         {foods.map((food) => (
           <div className="edit">
@@ -44,6 +27,6 @@ export function Calendar({ foods, setFoods }: CalendarInputProps) {
           </div>
         ))}
       </div>
-    </div>
+    </PageLayout>
   );
 }
