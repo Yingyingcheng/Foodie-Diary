@@ -1,16 +1,22 @@
 import { useState } from "react";
 import "./../App.css";
-import type { Food } from "./../type";
+import type { Food } from "../type";
 import { Link } from "react-router";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 let nextId = 0;
 
-export function Diary() {
-  const [foods, setFoods] = useState<Food[]>([]); //Food array
+type DiaryInputProps = {
+  foods: Food[];
+  setFoods: React.Dispatch<React.SetStateAction<Food[]>>;
+};
+
+export function Diary({ foods, setFoods }: DiaryInputProps) {
   const [inputValue, setInputValue] = useState("");
   const [selectedMeal, setSelectedMeal] = useState("BREAKFAST"); // Declare a state variable...
   const [selectedPlace, setSelectedPlace] = useState("CAFE"); // Declare a state variable...
-  //   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Food["date"]>(new Date());
   const [isEditingId, setIsEditingId] = useState<number | null>(null);
 
   // function handleChangeFood(newfood: Food) {
@@ -29,6 +35,7 @@ export function Diary() {
     setInputValue(food.name);
     setSelectedMeal(food.meal);
     setSelectedPlace(food.place);
+    setSelectedDate(food.date);
     setIsEditingId(food.id);
   }
 
@@ -41,7 +48,7 @@ export function Diary() {
             name: inputValue,
             meal: selectedMeal,
             place: selectedPlace,
-            // date: selectedDate,
+            date: selectedDate,
           };
         } else {
           return food;
@@ -62,6 +69,7 @@ export function Diary() {
         name: inputValue,
         meal: selectedMeal,
         place: selectedPlace,
+        date: selectedDate,
       },
     ]);
   }
@@ -70,7 +78,12 @@ export function Diary() {
     setInputValue("");
     setSelectedMeal("BREAKFAST");
     setSelectedPlace("CAFE");
+    setSelectedDate(new Date());
     setIsEditingId(null);
+  }
+
+  function handleSelectDate(d: Date | null) {
+    if (d) setSelectedDate(d);
   }
 
   return (
@@ -115,10 +128,16 @@ export function Diary() {
 
           <label>
             NOW is ...
-            <input
-              className="calendar"
+            {/* <input
+              
               type="datetime-local"
               id="Test_DatetimeLocal"
+            /> */}
+            <DatePicker
+              className="calendar"
+              showIcon
+              selected={selectedDate}
+              onChange={handleSelectDate}
             />
           </label>
           <select
@@ -158,12 +177,14 @@ export function Diary() {
         <div className="scroll">
           {foods.map((food) => (
             <div className="edit">
-              <br />
-              <h3>
-                Your {food.meal} diary
-                <br />
-                {food.name} in {food.place} today!
-              </h3>
+              <ul>
+                <li>
+                  {food.date ? `📅 ${food.date.toDateString()}` : ""} ☕{" "}
+                  {food.meal}
+                  <br />
+                  {food.name} in {food.place} today!
+                </li>
+              </ul>
               <button
                 className="editbutton"
                 onClick={() => {
