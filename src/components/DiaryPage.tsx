@@ -1,9 +1,9 @@
 import { useState } from "react";
 import "./../App.css";
 import type { Food } from "../type";
-import { Link } from "react-router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { LayoutPage } from "./LayoutPage";
 
 let nextId = 0;
 
@@ -76,26 +76,11 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
 
   return (
     <>
-      <div className="diaryhead">
-        <h1>FOODIE DIARY</h1>
-        <p>What you eat today...🍋</p>
-        <Link to="/diary">
-          <button
-            disabled
-            style={{
-              backgroundColor: " rgb(205, 176, 129)",
-              color: "white",
-            }}
-          >
-            Foodie Diary
-          </button>
-        </Link>{" "}
-        <Link to="/calendar">
-          <button>Calendar Memory</button>
-        </Link>{" "}
-        <Link to="/plan">
-          <button>Set Your Goals</button>
-        </Link>
+      <LayoutPage
+        title="FOODIE DIARY"
+        subtitle="What you eat today...🍋"
+        backgroundImage="url(lemon.png)"
+      >
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -194,7 +179,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             </div>
           ))}
         </div>
-      </div>
+      </LayoutPage>
     </>
   );
 }
