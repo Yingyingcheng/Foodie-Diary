@@ -19,18 +19,6 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
   const [selectedDate, setSelectedDate] = useState<Food["date"]>(new Date());
   const [isEditingId, setIsEditingId] = useState<number | null>(null);
 
-  // function handleChangeFood(newfood: Food) {
-  //   setFoods(
-  //     foods.map((food) => {
-  //       if (food.id === newfood.id) {
-  //         return newfood;
-  //       } else {
-  //         return food;
-  //       }
-  //     })
-  //   );
-  // }
-
   function handleEditClick(food: Food) {
     setInputValue(food.name);
     setSelectedMeal(food.meal);
