@@ -1,21 +1,17 @@
-import { Link } from "react-router";
 import "./../HomePage.css";
+import "./../App.css";
+import { LayoutPage } from "./LayoutPage";
 
 export function Home() {
   return (
-    <div className="home">
-      <></>
-      <h1>JOURNAL WITH ME</h1>
-      <p>Live your healthiest life...🥑</p>
-      <Link to="/diary">
-        <button>Foodie Diary</button>
-      </Link>{" "}
-      <Link to="/calendar">
-        <button>Calendar Memory</button>
-      </Link>{" "}
-      <Link to="/plan">
-        <button> Set Your Goals</button>
-      </Link>
-    </div>
+    <>
+      <LayoutPage
+        title="JOURNAL WITH ME"
+        subtitle="Live your healthiest life...🥑"
+        backgroundImage="url(avocado1.png)"
+      >
+        <></>
+      </LayoutPage>
+    </>
   );
 }

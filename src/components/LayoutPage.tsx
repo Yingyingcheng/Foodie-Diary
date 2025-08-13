@@ -18,6 +18,9 @@ export function LayoutPage({
     <div className="pagehead" style={{ backgroundImage: backgroundImage }}>
       <h1>{title}</h1>
       <p>{subtitle}</p>
+      <NavLink to="/" className={"navlink"}>
+        <button>HOME</button>
+      </NavLink>{" "}
       <NavLink to="/diary" className={"navlink"}>
         <button>Foodie Diary</button>
       </NavLink>{" "}

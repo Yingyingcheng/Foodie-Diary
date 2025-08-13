@@ -149,13 +149,13 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
         </form>
         <div className="scroll">
           {foods.map((food) => (
-            <div className="edit">
+            <div className="list">
               <ul>
                 <li>
                   {food.date ? `📅 ${food.date.toDateString()}` : ""} ☕{" "}
                   {food.meal}
                   <br />
-                  {food.name} in {food.place} today!
+                  ENJOY {food.name} in {food.place} today
                 </li>
               </ul>
               <button
