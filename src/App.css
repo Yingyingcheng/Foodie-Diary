@@ -1,5 +1,5 @@
 form {
-  max-width: 500px;
+  width: 560px;
   max-height: 360px;
   overflow-y: scroll;
   margin: 0 auto;
@@ -7,7 +7,7 @@ form {
   padding: 2rem;
   text-align: center;
   border-radius: 5em;
-  background-color: rgb(255, 243, 176);
+  background-color: rgba(255, 243, 176, 0.82);
   color: #473e21;
   display: flex;
   flex-direction: column;
@@ -93,7 +93,7 @@ form {
   background-size: cover;
   background-repeat: no-repeat;
   max-width: 1000px;
-  height: 650px;
+  height: 730px;
   margin: 0 auto;
   text-align: center;
   justify-content: center;
@@ -102,4 +102,73 @@ form {
 .navlink.active > button {
   background-color: rgb(205, 176, 129);
   color: "white";
+}
+
+.calendar-container {
+  max-width: 550px; /* Your preferred fixed width */
+  margin: 0 auto;
+  padding: 16px;
+  border-radius: 20px;
+  background-color: #fbf3f3cd;
+  margin-top: 15px;
+}
+
+.calendar-title {
+  text-align: center;
+  color: #be3535;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  font-weight: bold;
+  color: #be3535;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.calendar-cell {
+  border: 2px solid #ffffff;
+  border-radius: 6px;
+  padding: 8px;
+  min-height: 40px; /* same height for every cell */
+  overflow-y: auto; /* scroll if content is too tall */
+  font-size: 0.875rem;
+  position: relative;
+  color: #be3535;
+}
+
+.calendar-cell.today {
+  background-color: #be3535;
+  color: #fff3ed;
+}
+
+.calendar-cell.empty {
+  background: transparent;
+}
+
+.date-number {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.food-item {
+  margin-top: 4px;
+  padding: 4px;
+  text-align: center;
+  justify-content: center;
+}
+
+.delete-btn {
+  font-size: 0.3rem;
+  cursor: pointer;
+  text-align: center;
+  justify-content: center;
 }

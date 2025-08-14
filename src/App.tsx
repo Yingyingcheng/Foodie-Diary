@@ -18,6 +18,7 @@ function App() {
         path="/calendar"
         element={<Calendar foods={foods} setFoods={setFoods} />}
       />
+
       <Route path="/" element={<Home />} />
     </Routes>
   );

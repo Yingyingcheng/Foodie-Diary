@@ -15,7 +15,7 @@ export function LayoutPage({
   backgroundImage,
 }: LayoutPageProps) {
   return (
-    <div className="pagehead" style={{ backgroundImage: backgroundImage }}>
+    <div className="pagehead " style={{ backgroundImage: backgroundImage }}>
       <h1>{title}</h1>
       <p>{subtitle}</p>
       <NavLink to="/" className={"navlink"}>

@@ -14,14 +14,12 @@ button:focus-visible {
   outline: 4px auto rgb(230, 209, 173);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: white;
-    background-color: #ffffffc5;
-    font-family: "Special Elite", system-ui;
-  }
+:root {
+  color: white;
+  background-color: #ffffffc5;
+  font-family: "Special Elite", system-ui;
+}
 
-  button {
-    background-color: #ffffffc5;
-  }
+button {
+  background-color: #ffffffc5;
 }
