@@ -120,11 +120,12 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
               setSelectedMeal(e.target.value);
             }}
           >
-            <option value="BREAKFAST">BREAKFAST</option>
-            <option value="LUNCH">LUNCH</option>
-            <option value="BRUNCH">BRUNCH</option>
-            <option value="DINNER">DINNER</option>
-            <option value="SNACK">SNACK</option>
+            <option value="BREAKFAST"> BREAKFAST</option>
+            <option value="LUNCH"> LUNCH</option>
+            <option value="BRUNCH"> BRUNCH</option>
+            <option value="DINNER"> DINNER</option>
+            <option value="SNACK"> SNACK</option>
+            <option value="LATE NIGHT FOOD"> LATE NIGHT FOOD</option>
           </select>
 
           <select
@@ -137,6 +138,8 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             <option value="CAFE">CAFE</option>
             <option value="RESTAURANT">RESTAURANT</option>
             <option value="HOME SWEET HOME">HOME SWEET HOME</option>
+            <option value="OFFICE">OFFICE</option>
+            <option value="OTHERS">OTHERS</option>
           </select>
           <input
             className="textarea"

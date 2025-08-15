@@ -1,5 +1,5 @@
 form {
-  width: 560px;
+  max-width: 550px;
   max-height: 360px;
   overflow-y: scroll;
   margin: 0 auto;
@@ -17,6 +17,7 @@ form {
 .dropdownmenu {
   font-family: "Special Elite", system-ui;
   width: 20em;
+  max-width: 95%;
   height: 3em;
   border-radius: 1em;
   text-align: center;
@@ -30,7 +31,8 @@ form {
 .textarea {
   font-family: "Special Elite", system-ui;
   width: 20em;
-  height: 4em;
+  max-width: 95%;
+  height: 3em;
   border-radius: 1em;
   text-align: center;
   border-style: none;
@@ -44,6 +46,8 @@ form {
   width: 10em;
   height: 2em;
   margin: 0 auto;
+  text-align: center;
+  justify-content: center;
 }
 
 .scroll {
@@ -53,7 +57,7 @@ form {
 
 .list {
   font-weight: bold;
-  color: #fff3ed;
+  color: #6d4b3a;
   display: flex;
   justify-content: center;
 }
@@ -143,11 +147,21 @@ form {
   font-size: 0.875rem;
   position: relative;
   color: #be3535;
+  background-color: #fcd4d4a5;
 }
 
 .calendar-cell.today {
   background-color: #be3535;
   color: #fff3ed;
+}
+
+.calendar-cell.today.hasfoods {
+  background-color: #be3535;
+  color: #fff3ed;
+}
+
+.calendar-cell.hasfoods {
+  background-color: #f7eed1; /* light green, for example */
 }
 
 .calendar-cell.empty {
@@ -171,4 +185,24 @@ form {
   cursor: pointer;
   text-align: center;
   justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+}
+
+.calendar-nav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.7rem;
+  padding: 0 8px;
+  color: inherit;
+}
+
+.calendar-nav-btn:hover {
+  color: #ff9a9a; /* optional hover effect */
+  border: none;
 }

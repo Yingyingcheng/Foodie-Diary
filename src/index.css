@@ -8,11 +8,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-
+/* 
 button:focus,
 button:focus-visible {
-  outline: 4px auto rgb(230, 209, 173);
-}
+  outline: 2px auto rgb(230, 209, 173);
+} */
 
 :root {
   color: white;

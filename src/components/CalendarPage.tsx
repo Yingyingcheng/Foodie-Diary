@@ -1,11 +1,13 @@
 import clsx from "clsx";
 import {
+  addMonths,
   eachDayOfInterval,
   endOfMonth,
   format,
   getDay,
   isToday,
   startOfMonth,
+  subMonths,
 } from "date-fns";
 import { useMemo, useState } from "react";
 import type { Food } from "./../type";
@@ -17,9 +19,11 @@ type CalendarInputProps = {
 };
 
 export function Calendar({ foods, setFoods }: CalendarInputProps) {
-  const [currentDate] = useState(new Date());
-  const firstDayOfMonth = startOfMonth(currentDate);
-  const lastDayOfMonth = endOfMonth(currentDate);
+  // const [currentDate] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const firstDayOfMonth = startOfMonth(currentMonth);
+  const lastDayOfMonth = endOfMonth(currentMonth);
+  
 
   const daysInMonth = eachDayOfInterval({
     start: firstDayOfMonth,
@@ -28,11 +32,26 @@ export function Calendar({ foods, setFoods }: CalendarInputProps) {
 
   const startingDayIndex = getDay(firstDayOfMonth);
 
+  // useMemo(computeFn, dependencies)
+  // array.reduce(reducerFn, initialValue)
+
   const foodsByDate = useMemo(() => {
+    // Record<string, Food[]> : Accumulator type
+    // key = string, value = Food[]
+
     return foods.reduce((acc: Record<string, Food[]>, food) => {
+      // Skip if no date (date is null or undefined)
       if (!food.date) return acc;
+
+      //Convert Date to "yyyy-MM-dd" string
+      //Object keys must be strings
+
       const dateKey = format(food.date, "yyyy-MM-dd");
+
+      //If this date's value doesn't exist yet, create an empty array for this date
       if (!acc[dateKey]) acc[dateKey] = [];
+
+      //Add the current food to the correct date's array
       acc[dateKey].push(food);
       return acc;
     }, {});
@@ -52,8 +71,25 @@ export function Calendar({ foods, setFoods }: CalendarInputProps) {
       backgroundImage="url(cherry1.png)"
     >
       <div className="calendar-container">
-        <h2 className="calendar-title">{format(currentDate, "MMMM yyyy")}</h2>
-
+        <h2 className="calendar-title">
+          {" "}
+          <button
+            className="calendar-nav-btn"
+            onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+          >
+            {" "}
+            ◀
+          </button>
+          {format(currentMonth, "MMMM yyyy")}
+          <button
+            className="calendar-nav-btn"
+            onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+          >
+            {" "}
+            ▶
+          </button>
+        </h2>
+        <div className="calendar-nav"></div>
         <div className="calendar-weekdays">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <div key={day}>{day}</div>
@@ -72,9 +108,16 @@ export function Calendar({ foods, setFoods }: CalendarInputProps) {
             return (
               <div
                 key={index}
-                className={clsx("calendar-cell", isToday(day) && "today")}
+                className={clsx(
+                  "calendar-cell",
+                  isToday(day) && "today",
+                  foodsByDate[dateKey]?.length ? "hasfoods" : undefined
+                )}
               >
                 <div className="date-number">{format(day, "d")}</div>
+
+                {/* //Listing foods for that day */}
+
                 {todaysFoods.map((food) => (
                   <div key={food.id} className="food-item">
                     <span>
