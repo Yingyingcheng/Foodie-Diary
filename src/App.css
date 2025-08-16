@@ -109,7 +109,7 @@ form {
 }
 
 .calendar-container {
-  max-width: 550px; /* Your preferred fixed width */
+  max-width: 550px;
   margin: 0 auto;
   padding: 16px;
   border-radius: 20px;
@@ -142,7 +142,8 @@ form {
   border: 2px solid #ffffff;
   border-radius: 6px;
   padding: 8px;
-  min-height: 40px; /* same height for every cell */
+  min-height: 30px;
+  max-height: 60px; /* same height for every cell */
   overflow-y: auto; /* scroll if content is too tall */
   font-size: 0.875rem;
   position: relative;
@@ -171,13 +172,7 @@ form {
 .date-number {
   font-weight: bold;
   margin-bottom: 4px;
-}
-
-.food-item {
-  margin-top: 4px;
-  padding: 4px;
-  text-align: center;
-  justify-content: center;
+  cursor: pointer;
 }
 
 .delete-btn {
@@ -203,6 +198,34 @@ form {
 }
 
 .calendar-nav-btn:hover {
-  color: #ff9a9a; /* optional hover effect */
+  color: #ff9a9a;
   border: none;
+}
+
+.meals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 0.6rem;
+}
+
+.meal-item {
+  white-space: nowrap;
+}
+
+.calendar-cell.hasfoods .date-number {
+  background-color: rgba(255, 207, 167, 0.7);
+  border-radius: 30%;
+  padding: 2px;
+}
+.calendar-cell.hasfoods .date-number:hover {
+  background-color: rgba(255, 175, 255, 0.566);
+  border-radius: 30%;
+  padding: 2px;
+}
+
+.calendar-cell.today.hasfoods .date-number:hover {
+  background-color: #eb7474;
+  color: #fff3ed;
+  padding: 2px;
 }
