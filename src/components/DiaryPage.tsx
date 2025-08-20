@@ -17,7 +17,12 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
   const [selectedMeal, setSelectedMeal] = useState("BREAKFAST"); // Declare a state variable...
   const [selectedPlace, setSelectedPlace] = useState("CAFE"); // Declare a state variable...
   const [selectedDate, setSelectedDate] = useState<Food["date"]>(new Date());
+  const [selectedProtein, setSelectedProtein] = useState(0);
+  const [selectedFat, setSelectedFat] = useState(0);
+  const [selectedCarbs, setSelectedCarbs] = useState(0);
   const [isEditingId, setIsEditingId] = useState<number | null>(null);
+  const totalCalorie =
+    selectedProtein * 4 + selectedCarbs * 4 + selectedFat * 9;
 
   function handleEditClick(food: Food) {
     setInputValue(food.name);
@@ -25,6 +30,9 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     setSelectedPlace(food.place);
     setSelectedDate(food.date);
     setIsEditingId(food.id);
+    setSelectedProtein(food.protein);
+    setSelectedFat(food.fat);
+    setSelectedCarbs(food.carbs);
   }
 
   function handleEditSubmit() {
@@ -37,6 +45,10 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             meal: selectedMeal,
             place: selectedPlace,
             date: selectedDate,
+            protein: selectedProtein,
+            fat: selectedFat,
+            carbs: selectedCarbs,
+            calories: totalCalorie,
           };
         } else {
           return food;
@@ -58,6 +70,10 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
         meal: selectedMeal,
         place: selectedPlace,
         date: selectedDate,
+        protein: selectedProtein,
+        fat: selectedFat,
+        carbs: selectedCarbs,
+        calories: totalCalorie,
       },
     ]);
   }
@@ -68,11 +84,21 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     setSelectedPlace("CAFE");
     setSelectedDate(new Date());
     setIsEditingId(null);
+    setSelectedProtein(0);
+    setSelectedFat(0);
+    setSelectedCarbs(0);
   }
 
   function handleSelectDate(d: Date | null) {
     if (d) setSelectedDate(d);
   }
+
+  // function handleCalorieCalculator() {
+  //   const proteinCalorie = selectedProtein * 4;
+  //   const fatCalorie = selectedFat * 9;
+  //   const carbsCalorie = selectedCarbs * 4;
+  //   setTotalCalorie(proteinCalorie + fatCalorie + carbsCalorie);
+  // }
 
   return (
     <>
@@ -98,7 +124,6 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
               ? `You are now editting your diary!`
               : `Write your foodie diary now!`}
           </h2>
-
           <label>
             NOW is ...
             {/* <input
@@ -127,7 +152,6 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             <option value="SNACK"> SNACK</option>
             <option value="LATE NIGHT FOOD"> LATE NIGHT FOOD</option>
           </select>
-
           <select
             className="dropdownmenu"
             value={selectedPlace}
@@ -148,6 +172,43 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             onChange={(e) => setInputValue(e.target.value)}
           />
 
+          <div style={{ display: "flex", gap: 10 }}>
+            <label className="proteinlabel">
+              Protein(g):
+              <input
+                className="proteinarea"
+                value={selectedProtein}
+                placeholder="Protein(g)"
+                onChange={(e) =>
+                  setSelectedProtein(parseFloat(e.target.value) || 0)
+                }
+              />
+            </label>
+            <label>
+              Fat(g):
+              <input
+                className="fatarea"
+                value={selectedFat}
+                placeholder="Fat(g)"
+                onChange={(e) =>
+                  setSelectedFat(parseFloat(e.target.value) || 0)
+                }
+              />
+            </label>
+            <label>
+              Carbs(g):
+              <input
+                className="carbsarea"
+                value={selectedCarbs}
+                placeholder="Carbs(g)"
+                onChange={(e) =>
+                  setSelectedCarbs(parseFloat(e.target.value) || 0)
+                }
+              />
+            </label>
+          </div>
+          {/* <button onClick={handleCalorieCalculator}>Calculate Calories</button> */}
+          <h4>Your Total Calorie: {totalCalorie}</h4>
           <button className="submit">Submit</button>
         </form>
         <div className="scroll">
@@ -159,6 +220,8 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
                   {food.meal}
                   <br />
                   ENJOY {food.name} in {food.place} today
+                  <br />
+                  Calories: {food.calories}
                 </li>
               </ul>
               <button

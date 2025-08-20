@@ -1,6 +1,7 @@
 form {
   max-width: 550px;
-  max-height: 360px;
+  height: 450px;
+  max-height: 80%;
   overflow-y: scroll;
   margin: 0 auto;
   margin-top: 15px;
@@ -11,14 +12,15 @@ form {
   color: #473e21;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 9px;
+  align-items: center;
 }
 
 .dropdownmenu {
   font-family: "Special Elite", system-ui;
   width: 20em;
   max-width: 95%;
-  height: 3em;
+  height: 6em;
   border-radius: 1em;
   text-align: center;
   border-style: none;
@@ -32,7 +34,7 @@ form {
   font-family: "Special Elite", system-ui;
   width: 20em;
   max-width: 95%;
-  height: 3em;
+  height: 10em;
   border-radius: 1em;
   text-align: center;
   border-style: none;
@@ -42,6 +44,22 @@ form {
   font-size: medium;
   margin: auto;
 }
+.proteinarea,
+.fatarea,
+.carbsarea {
+  font-family: "Special Elite", system-ui;
+  width: 5em;
+  max-width: 95%;
+  height: 2em;
+  border-radius: 1em;
+  text-align: center;
+  border-style: none;
+  background-color: #ffffffaa;
+  color: #643927c3;
+  font-weight: bold;
+  margin: auto;
+}
+
 .submit {
   width: 10em;
   height: 2em;
@@ -85,6 +103,7 @@ form {
 .calendar {
   background-color: #ffffffaa;
   border-color: #ffffffaa;
+  border-radius: 20px;
 }
 
 .pagehead {
