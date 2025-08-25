@@ -20,10 +20,10 @@ type CalendarInputProps = {
 
 export function Calendar({ foods, setFoods }: CalendarInputProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [expandedDates, setExpandedDates] = useState<Record<string, boolean>>(
-    {}
-  );
-
+  // const [expandedDates, setExpandedDates] = useState<Record<string, boolean>>(
+  //   {}
+  // );
+  const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null); //for pop modal
   const firstDayOfMonth = startOfMonth(currentMonth);
   const lastDayOfMonth = endOfMonth(currentMonth);
   const daysInMonth = eachDayOfInterval({
@@ -45,12 +45,13 @@ export function Calendar({ foods, setFoods }: CalendarInputProps) {
   function handleDelete(id: number) {
     if (confirm("Do you wanna delete this foodie record?")) {
       setFoods((prev) => prev.filter((food) => food.id !== id));
-      alert("You successfully deleted this foodie record!");
+      alert(`You succesfully delete this foodie record!`);
     }
   }
 
   function toggleDate(dateKey: string) {
-    setExpandedDates((prev) => ({ ...prev, [dateKey]: !prev[dateKey] }));
+    // setExpandedDates((prev) => ({ ...prev, [dateKey]: !prev[dateKey] }));
+    setSelectedDateKey(dateKey);
   }
 
   return (
@@ -59,6 +60,91 @@ export function Calendar({ foods, setFoods }: CalendarInputProps) {
       subtitle="Share your diary with friends...🍒"
       backgroundImage="url(cherry1.png)"
     >
+      {selectedDateKey && (
+        <div className="modal-wrapper">
+          <div className="modal-content">
+            <button
+              className="modal-close-btn"
+              aria-label="Close"
+              type="button"
+              onClick={() => {
+                setSelectedDateKey(null);
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            <div className="modal-dateheader">📅 {selectedDateKey}</div>
+            <div className="meals-list">
+              {(foodsByDate[selectedDateKey] || []).map((food) => {
+                let emoji = "";
+                switch (food.meal.toUpperCase()) {
+                  case "BREAKFAST":
+                    emoji = "🍳";
+                    break;
+                  case "LUNCH":
+                    emoji = "🥗";
+                    break;
+                  case "BRUNCH":
+                    emoji = "🥞";
+                    break;
+                  case "DINNER":
+                    emoji = "🍛";
+                    break;
+                  case "SNACK":
+                    emoji = "🍩";
+                    break;
+                  case "LATE NIGHT FOOD":
+                    emoji = "🍔";
+                    break;
+                  default:
+                    emoji = "";
+                }
+                return (
+                  <div key={food.id} className="food-item">
+                    <div className="modal-list">
+                      <ul>
+                        <li>
+                          {emoji}
+                          {food.meal}
+                          <br />
+                          <br />
+                          {food.name} in {food.place}
+                          <br />
+                          <br />
+                          Fat(g) : {food.fat} <br />
+                          Carbs(g) : {food.carbs} <br />
+                          Protein(g) : {food.protein} <br />
+                          Total Calories : {food.calories}
+                        </li>
+                      </ul>
+                      <button
+                        className="modal-deletebutton"
+                        onClick={() => {
+                          handleDelete(food.id);
+                        }}
+                      >
+                        DELETE
+                      </button>
+                    </div>
+                    <br />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
       <div className="calendar-container">
         {/* Month navigation */}
         <h2 className="calendar-title">
@@ -114,38 +200,35 @@ export function Calendar({ foods, setFoods }: CalendarInputProps) {
                 </div>
 
                 {/* Summary view when collapsed */}
-                {!expandedDates[dateKey] && todaysFoods.length > 0 && (
-                  <div className="meals-summary">
-                    {todaysFoods.map((food) => {
-                      let emoji = "";
-                      switch (food.meal.toUpperCase()) {
-                        case "BREAKFAST":
-                          emoji = "🍳";
-                          break;
-                        case "LUNCH":
-                          emoji = "🥗";
-                          break;
-                        case "BRUNCH":
-                          emoji = "🥞";
-                          break;
-                        case "DINNER":
-                          emoji = "🍛";
-                          break;
-                        case "SNACKS":
-                          emoji = "🍩";
-                          break;
-                        case "LATE NIGHT FOOD":
-                          emoji = "🍔";
-                          break;
-                        default:
-                          emoji = "";
-                      }
-                      return `${emoji} ${food.meal}`;
-                    })}
-                  </div>
-                )}
+                {/* {!expandedDates[dateKey] && todaysFoods.length > 0 && ( */}
+                <div className="meals-summary">
+                  {todaysFoods.map((food) => {
+                    let emoji = "";
+                    switch (food.meal.toUpperCase()) {
+                      case "BREAKFAST":
+                        emoji = "🍳";
+                        break;
+                      case "LUNCH":
+                        emoji = "🥗";
+                        break;
+                      case "BRUNCH":
+                        emoji = "🥞";
+                        break;
+                      case "DINNER":
+                        emoji = "🍛";
+                        break;
+                      case "SNACK":
+                        emoji = "🍩";
+                        break;
+                      case "LATE NIGHT FOOD":
+                        emoji = "🍔";
+                        break;
+                    }
+                    return `${emoji} ${food.meal}`;
+                  })}
+                </div>
 
-                {/* Expanded meals list */}
+                {/* Expanded meals list
                 {expandedDates[dateKey] && (
                   <div className="meals-list">
                     {todaysFoods.map((food) => {
@@ -189,7 +272,7 @@ export function Calendar({ foods, setFoods }: CalendarInputProps) {
                       );
                     })}
                   </div>
-                )}
+                )} */}
               </div>
             );
           })}
