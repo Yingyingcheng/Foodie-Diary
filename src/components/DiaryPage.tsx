@@ -15,7 +15,7 @@ type DiaryInputProps = {
 export function Diary({ foods, setFoods }: DiaryInputProps) {
   const [inputValue, setInputValue] = useState("");
   const [selectedMeal, setSelectedMeal] = useState("BREAKFAST"); // Declare a state variable...
-  const [selectedPlace, setSelectedPlace] = useState("CAFE"); // Declare a state variable...
+  const [selectedPlace, setSelectedPlace] = useState("HOME SWEET HOME"); // Declare a state variable...
   const [selectedDate, setSelectedDate] = useState<Food["date"]>(new Date());
   const [selectedProtein, setSelectedProtein] = useState(0);
   const [selectedFat, setSelectedFat] = useState(0);
@@ -58,24 +58,26 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
   }
 
   function handleDelete(isDeletingId: number) {
-    setFoods(foods.filter((food) => food.id !== isDeletingId));
+    const deleteFoods = foods.filter((food) => food.id !== isDeletingId);
+    setFoods(deleteFoods);
+    localStorage.setItem("foods", JSON.stringify(deleteFoods));
   }
 
   function handleNewSubmit() {
-    setFoods([
-      ...foods,
-      {
-        id: nextId++,
-        name: inputValue,
-        meal: selectedMeal,
-        place: selectedPlace,
-        date: selectedDate,
-        protein: selectedProtein,
-        fat: selectedFat,
-        carbs: selectedCarbs,
-        calories: totalCalorie,
-      },
-    ]);
+    const newFood = {
+      id: nextId++,
+      name: inputValue,
+      meal: selectedMeal,
+      place: selectedPlace,
+      date: selectedDate,
+      protein: selectedProtein,
+      fat: selectedFat,
+      carbs: selectedCarbs,
+      calories: totalCalorie,
+    };
+    const updatedFoods = [...foods, newFood];
+    setFoods(updatedFoods);
+    localStorage.setItem("foods", JSON.stringify(updatedFoods));
   }
 
   function handleResetForm() {
@@ -146,8 +148,8 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             }}
           >
             <option value="BREAKFAST"> BREAKFAST</option>
-            <option value="LUNCH"> LUNCH</option>
             <option value="BRUNCH"> BRUNCH</option>
+            <option value="LUNCH"> LUNCH</option>
             <option value="DINNER"> DINNER</option>
             <option value="SNACK"> SNACK</option>
             <option value="LATE NIGHT FOOD"> LATE NIGHT FOOD</option>
@@ -159,10 +161,11 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
               setSelectedPlace(e.target.value);
             }}
           >
+            <option value="HOME SWEET HOME">HOME SWEET HOME</option>
+            <option value="SCHOOL">SCHOOL</option>
+            <option value="OFFICE">OFFICE</option>
             <option value="CAFE">CAFE</option>
             <option value="RESTAURANT">RESTAURANT</option>
-            <option value="HOME SWEET HOME">HOME SWEET HOME</option>
-            <option value="OFFICE">OFFICE</option>
             <option value="OTHERS">OTHERS</option>
           </select>
           <input
