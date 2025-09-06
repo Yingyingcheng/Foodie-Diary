@@ -42,7 +42,7 @@ export function Calendar({ foods, setFoods }: CalendarInputProps) {
     }, {});
   }, [foods]);
 
-  function handleDelete(id: number) {
+  function handleDelete(id: string) {
     if (confirm("Do you wanna delete this foodie record?")) {
       setFoods((prev) => prev.filter((food) => food.id !== id));
       alert(`You succesfully delete this foodie record!`);

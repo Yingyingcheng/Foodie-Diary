@@ -6,6 +6,7 @@ import { Home } from "./components/HomePage";
 import { Plan } from "./components/PlanPage";
 import { useState } from "react";
 import type { Food } from "./type";
+import { useEffect } from "react";
 
 function App() {
   const storedFood = localStorage.getItem("foods");
@@ -25,6 +26,11 @@ function App() {
         })
       : []
   );
+
+  //store data while foods changed!!!!
+  useEffect(() => {
+    localStorage.setItem("foods", JSON.stringify(foods));
+  }, [foods]);
 
   //Food array
   return (

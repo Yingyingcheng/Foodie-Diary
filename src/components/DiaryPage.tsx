@@ -55,13 +55,11 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
       }
     });
     setFoods(editFoods);
-    localStorage.setItem("foods", JSON.stringify(editFoods));
   }
 
   function handleDelete(isDeletingId: string) {
     const deleteFoods = foods.filter((food) => food.id !== isDeletingId);
     setFoods(deleteFoods);
-    localStorage.setItem("foods", JSON.stringify(deleteFoods));
   }
 
   function handleNewSubmit() {
@@ -78,7 +76,6 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     };
     const updatedFoods = [...foods, newFood];
     setFoods(updatedFoods);
-    localStorage.setItem("foods", JSON.stringify(updatedFoods));
   }
 
   function handleResetForm() {
