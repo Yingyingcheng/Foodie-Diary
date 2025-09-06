@@ -4,8 +4,9 @@ import type { Food } from "../type";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { LayoutPage } from "./LayoutPage";
+import { v4 as uuidv4 } from "uuid";
 
-let nextId = 0;
+// let nextId = 0;
 
 type DiaryInputProps = {
   foods: Food[];
@@ -20,7 +21,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
   const [selectedProtein, setSelectedProtein] = useState(0);
   const [selectedFat, setSelectedFat] = useState(0);
   const [selectedCarbs, setSelectedCarbs] = useState(0);
-  const [isEditingId, setIsEditingId] = useState<number | null>(null);
+  const [isEditingId, setIsEditingId] = useState<string | null>(null);
   const totalCalorie =
     selectedProtein * 4 + selectedCarbs * 4 + selectedFat * 9;
 
@@ -36,28 +37,28 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
   }
 
   function handleEditSubmit() {
-    setFoods(
-      foods.map((food) => {
-        if (food.id === isEditingId) {
-          return {
-            id: isEditingId,
-            name: inputValue,
-            meal: selectedMeal,
-            place: selectedPlace,
-            date: selectedDate,
-            protein: selectedProtein,
-            fat: selectedFat,
-            carbs: selectedCarbs,
-            calories: totalCalorie,
-          };
-        } else {
-          return food;
-        }
-      })
-    );
+    const editFoods = foods.map((food) => {
+      if (food.id === isEditingId) {
+        return {
+          id: isEditingId,
+          name: inputValue,
+          meal: selectedMeal,
+          place: selectedPlace,
+          date: selectedDate,
+          protein: selectedProtein,
+          fat: selectedFat,
+          carbs: selectedCarbs,
+          calories: totalCalorie,
+        };
+      } else {
+        return food;
+      }
+    });
+    setFoods(editFoods);
+    localStorage.setItem("foods", JSON.stringify(editFoods));
   }
 
-  function handleDelete(isDeletingId: number) {
+  function handleDelete(isDeletingId: string) {
     const deleteFoods = foods.filter((food) => food.id !== isDeletingId);
     setFoods(deleteFoods);
     localStorage.setItem("foods", JSON.stringify(deleteFoods));
@@ -65,7 +66,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
 
   function handleNewSubmit() {
     const newFood = {
-      id: nextId++,
+      id: uuidv4(),
       name: inputValue,
       meal: selectedMeal,
       place: selectedPlace,
