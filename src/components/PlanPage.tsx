@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./../App.css";
 import type { Food } from "../type";
 import { LayoutPage } from "./LayoutPage";
