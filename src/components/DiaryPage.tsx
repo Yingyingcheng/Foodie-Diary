@@ -6,8 +6,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { LayoutPage } from "./LayoutPage";
 import { v4 as uuidv4 } from "uuid";
 
-// let nextId = 0;
-
 type DiaryInputProps = {
   foods: Food[];
   setFoods: React.Dispatch<React.SetStateAction<Food[]>>;
@@ -24,6 +22,8 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
   const [isEditingId, setIsEditingId] = useState<string | null>(null);
   const totalCalorie =
     selectedProtein * 4 + selectedCarbs * 4 + selectedFat * 9;
+  const [file, setFile] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false); // 01.21.2026 新增 Loading 狀態
 
   function handleEditClick(food: Food) {
     setInputValue(food.name);
@@ -93,12 +93,53 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     if (d) setSelectedDate(d);
   }
 
-  // function handleCalorieCalculator() {
-  //   const proteinCalorie = selectedProtein * 4;
-  //   const fatCalorie = selectedFat * 9;
-  //   const carbsCalorie = selectedCarbs * 4;
-  //   setTotalCalorie(proteinCalorie + fatCalorie + carbsCalorie);
-  // }
+  // 01.21.2026 Revise image upload
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files || e.target.files.length === 0) return;
+
+    const file = e.target.files[0];
+    setFile(URL.createObjectURL(file));
+    setIsLoading(true); // Starts analyze
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      try {
+        const base64String = (reader.result as string).split(",")[1];
+
+        const res = await fetch("/api/server", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: base64String }),
+        });
+
+        if (!res.ok) throw new Error("Server responded with error");
+
+        const textResult = await res.text();
+
+        const output = JSON.parse(textResult);
+
+        setSelectedProtein(output.protein);
+        setSelectedCarbs(output.carb);
+        setSelectedFat(output.fat);
+
+        if (output.composition) {
+          setInputValue((prev) =>
+            prev === ""
+              ? output.composition
+              : `${prev}\n(Analysis: ${output.composition})`,
+          );
+
+          console.log(`Detected: ${output.composition}`);
+        }
+      } catch (error) {
+        console.error("AI analysis failure:", error);
+        alert("Sorry, I cannot recoginize this image! Please try again!");
+      } finally {
+        setIsLoading(false); // **
+      }
+    };
+    reader.readAsDataURL(file);
+  }
 
   return (
     <>
@@ -173,6 +214,36 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             onChange={(e) => setInputValue(e.target.value)}
           />
 
+          <div className="UploadSection">
+            {/* */}
+            <input
+              id="ImageUpload"
+              type="file"
+              style={{ display: "none" }}
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
+            {/* */}
+            <label htmlFor="ImageUpload" className="ContainerButton">
+              <div className="ImageContainer">
+                {file ? (
+                  <img className="resizeImage" src={file} alt="Image preview" />
+                ) : (
+                  <div className="ImagePlaceholder">
+                    <span style={{ fontSize: "1.5rem" }}>📸</span>
+                    <p>Upload a Photo to Calculate</p>
+                  </div>
+                )}
+                {/*  */}
+                {isLoading && (
+                  <div className="LoadingOverlay">
+                    <div className="Spinner"></div>
+                    <p>Analyzing your calories...</p>
+                  </div>
+                )}
+              </div>
+            </label>
+          </div>
           <div style={{ display: "flex", gap: 10 }}>
             <label className="proteinlabel">
               Protein(g):

@@ -20,7 +20,8 @@ form {
   font-family: "Special Elite", system-ui;
   width: 20em;
   max-width: 95%;
-  height: 6em;
+  height: auto;
+  min-height: 3em;
   border-radius: 1em;
   text-align: center;
   border-style: none;
@@ -32,9 +33,11 @@ form {
 
 .textarea {
   font-family: "Special Elite", system-ui;
+  flex-shrink: 0;
   width: 20em;
   max-width: 95%;
-  height: 10em;
+  height: auto;
+  min-height: 4em;
   border-radius: 1em;
   text-align: center;
   border-style: none;
@@ -42,7 +45,6 @@ form {
   color: #643927c3;
   font-weight: bold;
   font-size: medium;
-  margin: auto;
 }
 .proteinarea,
 .fatarea,
@@ -115,9 +117,10 @@ form {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  max-width: 1000px;
-  height: 730px;
-  margin: 0 auto;
+  max-width: 85%;
+  min-height: 100vh;
+  height: auto;
+  margin: 10px auto;
   text-align: center;
   justify-content: center;
 }
@@ -201,12 +204,6 @@ form {
   justify-content: center;
 }
 
-@media (max-width: 768px) {
-  .container {
-    flex-direction: column;
-  }
-}
-
 .calendar-nav-btn {
   background: none;
   border: none;
@@ -251,11 +248,11 @@ form {
 
 .modal-wrapper {
   backdrop-filter: blur(1px);
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  height: 105%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 100;
   display: flex;
@@ -316,4 +313,213 @@ form {
 .food-item {
   color: #601818d7;
   font-size: small;
+}
+
+.ImageUpload {
+  background-color: #d8c39fc4;
+  width: 15em;
+  max-width: 90%;
+  height: 3em;
+  margin: 0 auto;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 5px;
+  /* --- ADD THESE THREE LINES --- */
+  display: flex; /* Enables flexbox */
+  align-items: center; /* Centers text vertically (top to bottom) */
+  justify-content: center; /* Centers text horizontally (left to right) */
+  /* ---------------------------- */
+  text-align: center;
+}
+.ImageUpload:hover {
+  background-color: #4f3629;
+  color: #f7eed1;
+}
+
+/* .ImageCalculate {
+  background-color: rgb(215, 229, 239);
+  width: 10em;
+  height: 2em;
+  margin: 0 auto;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 5px;
+  justify-content: center;
+} */
+
+.nav-menu {
+  display: flex;
+  flex-direction: row; /* Desktop: Side-by-side */
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 20px; /* Space before the content/children */
+  width: 100%;
+}
+.navlink {
+  text-decoration: none; /* Removes underline from <a> tag */
+}
+
+/* 01/14/ 2026 Responsive media with stack by adding <nav className="nav-menu"> in LayoutPage*/
+@media (max-width: 768px) {
+  .pagehead {
+    border-radius: 2em; /* Rounded corners look too big on small screens */
+    padding: 1rem;
+  }
+
+  .nav-menu {
+    flex-direction: column; /* Stack vertically */
+    align-items: center;
+  }
+
+  .navlink {
+    width: 80%; /* Make buttons wider for easier tapping */
+  }
+
+  /* If the form is cutting off: */
+  form {
+    max-width: 90%;
+    height: auto; /* Don't force a fixed height on mobile forms */
+    border-radius: 2em;
+  }
+}
+
+/* 01/18/2026 add set your goal page contents*/
+.inputgoal {
+  font-family: "Special Elite", system-ui;
+  width: 11em;
+  max-width: 95%;
+  height: 2em;
+  border-radius: 1em;
+  text-align: center;
+  border-style: none;
+  background-color: #ffffffaa;
+  color: #643927c3;
+  font-weight: bold;
+  font-size: medium;
+  margin: auto;
+}
+
+.PlanForm {
+  color: rgba(80, 28, 28, 0.839);
+  background-color: rgba(243, 233, 215, 0.665);
+}
+
+/* 01/19/2026 add calendar page contents*/
+.modal-summary-card {
+  margin-top: 5px;
+  font-size: 0.8rem;
+  color: #473e21;
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(221, 160, 160, 0.352);
+  border: 1px solid rgba(76, 5, 5, 0.898);
+}
+.modal-summary-card.under {
+  border-left: 5px solid #a21212;
+}
+
+.modal-summary-card.over {
+  border-left: 5px solid #7b2300;
+  background-color: #e6d4b7;
+}
+
+.summary-stat {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.summary-result {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 1rem;
+}
+
+hr {
+  opacity: 0.2;
+  margin: 10px 0;
+}
+
+.plan-card {
+  color: rgb(243, 233, 215);
+  background-color: rgba(235, 147, 117, 0.671);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(111, 54, 54, 0.672);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.stat-box {
+  background: #f8fdf879;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(184, 91, 91, 0.672);
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.stat-number {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #e47143bb;
+}
+
+/* 01.20.2026  Added upload image revise*/
+.ImageContainer {
+  width: 100%;
+  max-width: 250px;
+  aspect-ratio: 1 / 1; /* 保持正方形，最整齊 */
+  /* 讓容器自己在父層中居中 */
+  margin: 10px auto;
+
+  /* 讓容器內部的東西居中 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+  border: 2px dashed #ccc;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background-color: whitesmoke;
+
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.ImageContainer:hover {
+  background-color: rgba(246, 236, 209, 0.845);
+  border-radius: #643927;
+  transform: translateY(-2px);
+}
+
+.resizeImage {
+  width: 100%;
+  height: auto;
+}
+
+.ImagePlaceholder {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.ContainerButton {
+  cursor: pointer;
+  display: block;
+  margin: auto;
 }

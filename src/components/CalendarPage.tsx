@@ -16,13 +16,11 @@ import { LayoutPage } from "./LayoutPage";
 type CalendarInputProps = {
   foods: Food[];
   setFoods: React.Dispatch<React.SetStateAction<Food[]>>;
+  dailyGoal: number;
 };
 
-export function Calendar({ foods, setFoods }: CalendarInputProps) {
+export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  // const [expandedDates, setExpandedDates] = useState<Record<string, boolean>>(
-  //   {}
-  // );
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null); //for pop modal
   const firstDayOfMonth = startOfMonth(currentMonth);
   const lastDayOfMonth = endOfMonth(currentMonth);
@@ -41,6 +39,24 @@ export function Calendar({ foods, setFoods }: CalendarInputProps) {
       return acc;
     }, {});
   }, [foods]);
+
+  {
+    /* 01/18/2026 */
+  }
+  const selectedDateKcal = useMemo(() => {
+    if (!selectedDateKey) return { total: 0, remaining: 0 };
+    const dayFoods = foodsByDate[selectedDateKey] || [];
+    const total = dayFoods.reduce(
+      (sum, food) => sum + (Number(food.calories) || 0),
+      0,
+    );
+    // Ensure dailyGoal is a number
+    const goal = Number(dailyGoal) || 2000;
+    return {
+      total,
+      remaining: goal - total,
+    };
+  }, [selectedDateKey, foodsByDate, dailyGoal]);
 
   function handleDelete(id: string) {
     if (confirm("Do you wanna delete this foodie record?")) {
@@ -85,6 +101,30 @@ export function Calendar({ foods, setFoods }: CalendarInputProps) {
               </svg>
             </button>
             <div className="modal-dateheader">📅 {selectedDateKey}</div>
+            {/* 01/18/2026 */}
+            <div
+              className={clsx(
+                "modal-summary-card",
+                selectedDateKcal.remaining < 0 ? "over" : "under",
+              )}
+            >
+              <div className="summary-stat">
+                <span>Daily Total: </span>
+                <strong>{selectedDateKcal.total} kcal</strong>
+              </div>
+              <div className="summary-stat">
+                <span>Target: </span>
+                <span>{dailyGoal} kcal</span>
+              </div>
+              <hr />
+              <div className="summary-result">
+                {isNaN(selectedDateKcal.remaining)
+                  ? "Calculating..."
+                  : selectedDateKcal.remaining < 0
+                    ? `You are ${Math.abs(selectedDateKcal.remaining)} kcal over goal 🫠`
+                    : `You have ${selectedDateKcal.remaining} kcal remaining 🙂‍↔️`}
+              </div>
+            </div>
             <div className="meals-list">
               {(foodsByDate[selectedDateKey] || []).map((food) => {
                 let emoji = "";
@@ -188,7 +228,7 @@ export function Calendar({ foods, setFoods }: CalendarInputProps) {
                 className={clsx(
                   "calendar-cell",
                   isToday(day) && "today",
-                  todaysFoods.length > 0 && "hasfoods"
+                  todaysFoods.length > 0 && "hasfoods",
                 )}
               >
                 {/* Date number */}

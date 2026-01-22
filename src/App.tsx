@@ -24,14 +24,22 @@ function App() {
           }
           return value; // Return other values as they are
         })
-      : []
+      : [],
   );
 
-  //store data while foods changed!!!!
+  //store data while foods changed!!!! perform side effect for pesistency with localStorage
   useEffect(() => {
     localStorage.setItem("foods", JSON.stringify(foods));
   }, [foods]);
 
+  // 01.17.2026 The PlanPage State
+  const [dailyGoal, setDailyGoal] = useState<number>(() => {
+    const saved = localStorage.getItem("daily_goal");
+    return saved ? JSON.parse(saved) : 2000;
+  });
+  useEffect(() => {
+    localStorage.setItem("daily_goal", JSON.stringify(dailyGoal));
+  }, [dailyGoal]);
   //Food array
   return (
     <Routes>
@@ -41,14 +49,23 @@ function App() {
       />
       <Route
         path="/calendar"
-        element={<Calendar foods={foods} setFoods={setFoods} />}
+        element={
+          <Calendar foods={foods} setFoods={setFoods} dailyGoal={dailyGoal} />
+        }
       />
 
       <Route path="/" element={<Home />} />
 
       <Route
         path="/plan"
-        element={<Plan foods={foods} setFoods={setFoods} />}
+        element={
+          <Plan
+            foods={foods}
+            setFoods={setFoods}
+            dailyGoal={dailyGoal}
+            setDailyGoal={setDailyGoal}
+          />
+        }
       />
     </Routes>
   );
