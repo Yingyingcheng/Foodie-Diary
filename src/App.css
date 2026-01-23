@@ -401,7 +401,8 @@ form {
 
 .PlanForm {
   color: rgba(80, 28, 28, 0.839);
-  background-color: rgba(243, 233, 215, 0.665);
+  background-color: rgba(239, 178, 158, 0.336);
+  box-shadow: 0 4px 15px rgba(111, 54, 54, 0.672);
 }
 
 /* 01/19/2026 add calendar page contents*/
@@ -443,13 +444,19 @@ hr {
 }
 
 .plan-card {
-  color: rgb(243, 233, 215);
-  background-color: rgba(235, 147, 117, 0.671);
+  color: rgb(255, 250, 240);
+  background-color: #fee4e200;
   padding: 25px;
   border-radius: 20px;
   box-shadow: 0 4px 15px rgba(111, 54, 54, 0.672);
 }
-
+.plan-card:hover {
+  background-color: rgba(249, 237, 201, 0.769);
+  border-radius: #643927;
+  transform: translateY(-3px);
+  cursor: pointer;
+  color: #643927;
+}
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -459,6 +466,7 @@ hr {
 
 .stat-box {
   background: #f8fdf879;
+
   padding: 15px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(184, 91, 91, 0.672);

@@ -97,48 +97,85 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length === 0) return;
 
-    const file = e.target.files[0];
-    setFile(URL.createObjectURL(file));
+    const originalFile = e.target.files[0];
+    setFile(URL.createObjectURL(originalFile));
     setIsLoading(true); // Starts analyze
 
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      try {
-        const base64String = (reader.result as string).split(",")[1];
+    const img = new Image();
+    img.src = URL.createObjectURL(originalFile);
+    // const reader = new FileReader();
 
+    img.onload = async () => {
+      const canvas = document.createElement("canvas");
+      const max_width = 800;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > max_width) {
+        height *= max_width / width;
+        width = max_width;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx?.drawImage(img, 0, 0, width, height);
+
+      // 3. Quality: 0.7 's JPEG Base64 : Vercel's 4.5MB limit
+      const compressedBase64 = canvas
+        .toDataURL("image/jpeg", 0.9)
+        .split(",")[1];
+
+      try {
         const res = await fetch("/api/server", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image: base64String }),
+          body: JSON.stringify({ image: compressedBase64 }),
         });
 
-        if (!res.ok) throw new Error("Server responded with error");
+        if (!res.ok) {
+          const errorText = await res.text();
+          // Handle specific API Quota errors
+          if (res.status === 429) throw new Error("QUOTA_EXCEEDED");
+          if (res.status === 503) throw new Error("SERVER_OVERLOADED");
+          throw new Error(errorText || "Server error");
+        }
 
         const textResult = await res.text();
 
         const output = JSON.parse(textResult);
 
-        setSelectedProtein(output.protein);
-        setSelectedCarbs(output.carb);
-        setSelectedFat(output.fat);
+        setSelectedProtein(output.protein || 0);
+        setSelectedCarbs(output.carb || 0);
+        setSelectedFat(output.fat || 0);
 
         if (output.composition) {
           setInputValue((prev) =>
             prev === ""
               ? output.composition
-              : `${prev}\n(Analysis: ${output.composition})`,
+              : `${prev}\n(AI Analysis: ${output.composition})`,
           );
 
           console.log(`Detected: ${output.composition}`);
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("AI analysis failure:", error);
-        alert("Sorry, I cannot recoginize this image! Please try again!");
+        if (error.message === "QUOTA_EXCEEDED") {
+          alert(
+            "The AI is taking a break! (Free Tier limit reached). Please try again in 1 minute. ☕",
+          );
+        } else if (error.message === "SERVER_OVERLOADED") {
+          alert(
+            "The AI server is too busy right now. Please try uploading again.",
+          );
+        } else {
+          alert("Could not recognize this meal. Please try a clearer photo!");
+        }
       } finally {
-        setIsLoading(false); // **
+        setIsLoading(false);
+        URL.revokeObjectURL(img.src); // Clean up memory
       }
     };
-    reader.readAsDataURL(file);
   }
 
   return (
@@ -207,7 +244,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             <option value="RESTAURANT">RESTAURANT</option>
             <option value="OTHERS">OTHERS</option>
           </select>
-          <input
+          <input //改成textarea components
             className="textarea"
             value={inputValue}
             placeholder="Write it down...🥨"
