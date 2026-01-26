@@ -13,7 +13,7 @@ export function Home() {
       >
         <div style={{ marginTop: "20px", lineHeight: "1.6" }}>
           {/* Main Animated Heading */}
-          <h2 style={{ minHeight: "1.5em" }}>
+          <h3 style={{ minHeight: "1.5em" }}>
             <Typewriter
               options={{
                 strings: [
@@ -27,25 +27,19 @@ export function Home() {
                 deleteSpeed: 30,
               }}
             />
-          </h2>
+          </h3>
 
           {/* Static or secondary typing effect for the description */}
-          <h3>
+          <h4>
+            Snap it, log it, and savor your meals while keeping your healthiest
+            life on track.
             <Typewriter
-              onInit={(typewriter) => {
-                typewriter
-                  .pauseFor(1000) // Wait for the heading to start
-                  .typeString(
-                    "Snap it, log it, and savor your meals while keeping your healthiest life on track.🤍",
-                  )
-                  .start();
-              }}
               options={{
                 delay: 40,
-                cursor: "💫✨", // You can even change the cursor!
+                cursor: "💫✨",
               }}
             />
-          </h3>
+          </h4>
         </div>
       </LayoutPage>
     </>
