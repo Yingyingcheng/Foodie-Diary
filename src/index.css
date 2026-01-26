@@ -23,3 +23,18 @@ button:focus-visible {
 button {
   background-color: #ffffffc5;
 }
+
+button,
+.button-link {
+  /* Standard property first */
+  appearance: none;
+  /* Fallback for older Webkit browsers (iOS Safari < 15.4) */
+  -webkit-appearance: none;
+
+  /* Resetting the color/text */
+  color: black;
+  text-decoration: none;
+
+  /* Ensure the "Special Elite" font isn't overridden */
+  font-family: "Special Elite", system-ui, serif;
+}
