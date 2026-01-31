@@ -453,14 +453,14 @@ hr {
   background-color: #fee4e200;
   padding: 25px;
   border-radius: 20px;
+  border: dashed whitesmoke;
   box-shadow: 0 4px 15px rgba(111, 54, 54, 0.672);
 }
 .plan-card:hover {
-  background-color: rgb(255, 167, 196, 0.5);
-  border-radius: #643927;
+  background-color: rgba(255, 205, 167, 0.524);
+  border: dashed orange;
   transform: translateY(-3px);
   cursor: pointer;
-  color: #fff3f3;
 }
 .stats-grid {
   display: grid;
