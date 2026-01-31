@@ -12,6 +12,7 @@ import {
 import { useMemo, useState } from "react";
 import type { Food } from "./../type";
 import { LayoutPage } from "./LayoutPage";
+import Typewriter from "typewriter-effect";
 
 type CalendarInputProps = {
   foods: Food[];
@@ -73,7 +74,21 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
   return (
     <LayoutPage
       title="Calendar Memory"
-      subtitle="Share your diary with friends...🍒"
+      subtitle={
+        <Typewriter
+          options={{
+            strings: [
+              "Share your diary with friends...",
+              "Relive your favorite meals...✨",
+            ],
+            autoStart: true,
+            loop: true,
+            delay: 50,
+            deleteSpeed: 30,
+            cursor: "🍒",
+          }}
+        />
+      }
       backgroundImage="url(cherry1.png)"
     >
       {selectedDateKey && (

@@ -4,6 +4,7 @@ import { LayoutPage } from "./LayoutPage";
 import { useState, useMemo } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
+import Typewriter from "typewriter-effect";
 
 type PlanInputProps = {
   foods: Food[];
@@ -52,7 +53,18 @@ export function Plan({ foods, dailyGoal, setDailyGoal }: PlanInputProps) {
     <>
       <LayoutPage
         title="SET YOUR GOAL"
-        subtitle="Achieve your nutrition goals....🍑"
+        subtitle={
+          <Typewriter
+            options={{
+              strings: ["Achieve your nutrition goals...."],
+              autoStart: true,
+              loop: true,
+              delay: 50,
+              deleteSpeed: 35,
+              cursor: "🍑",
+            }}
+          />
+        }
         backgroundImage="url(peach5.png)"
       >
         <form className="PlanForm">

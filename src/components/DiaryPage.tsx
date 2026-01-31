@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { LayoutPage } from "./LayoutPage";
 import { v4 as uuidv4 } from "uuid";
+import Typewriter from "typewriter-effect";
 
 type DiaryInputProps = {
   foods: Food[];
@@ -182,7 +183,21 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     <>
       <LayoutPage
         title="FOODIE DIARY"
-        subtitle="What you eat today...🍋"
+        subtitle={
+          <Typewriter
+            options={{
+              strings: [
+                "What you eat today...",
+                "Your foodie journey, captured...📸",
+              ],
+              autoStart: true,
+              loop: true,
+              delay: 50,
+              deleteSpeed: 35,
+              cursor: "🍋",
+            }}
+          />
+        }
         backgroundImage="url(lemon.png)"
       >
         <form

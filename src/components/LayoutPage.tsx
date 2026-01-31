@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 
 type LayoutPageProps = {
   title: string;
-  subtitle: string;
+  subtitle: ReactNode;
   children: ReactNode;
   backgroundImage: string;
 };
