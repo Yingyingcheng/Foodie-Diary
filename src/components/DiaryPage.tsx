@@ -259,7 +259,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             <option value="RESTAURANT">RESTAURANT</option>
             <option value="OTHERS">OTHERS</option>
           </select>
-          <input //改成textarea components
+          <textarea //改成textarea components
             className="textarea"
             value={inputValue}
             placeholder="Write it down...🥨"
