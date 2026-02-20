@@ -333,7 +333,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
           </div>
           {/* <button onClick={handleCalorieCalculator}>Calculate Calories</button> */}
           <h4>Your Total Calorie: {totalCalorie}</h4>
-          <button className="submit">Submit</button>
+          <button className="submitbutton">Submit</button>
         </form>
         <div className="scroll">
           {foods.map((food) => (

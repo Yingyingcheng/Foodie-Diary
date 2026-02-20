@@ -84,7 +84,7 @@ export function Plan({ foods, dailyGoal, setDailyGoal }: PlanInputProps) {
               }}
             />
           </label>
-          <button type="submit" onClick={handleSave}>
+          <button className="submitbutton" type="submit" onClick={handleSave}>
             Save My New Goal
           </button>
 
