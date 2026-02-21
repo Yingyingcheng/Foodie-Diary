@@ -527,3 +527,14 @@ hr {
   display: block;
   margin: auto;
 }
+
+/* Add to your CSS file */
+.user-profile-nav {
+  position: absolute;
+  top: 35px;
+  right: 12px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

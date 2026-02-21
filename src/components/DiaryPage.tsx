@@ -189,6 +189,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
               strings: [
                 "What you eat today...",
                 "Your foodie journey, captured...📸",
+                "What's on the menu today?",
               ],
               autoStart: true,
               loop: true,
