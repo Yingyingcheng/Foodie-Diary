@@ -61,10 +61,16 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
   }
 
   useEffect(() => {
-    const editFood = location.state?.editFood as Food | undefined;
-    if (editFood) {
-      handleEditClick(editFood);
-      window.history.replaceState({}, document.title);
+    if (location.state !== null && location.state !== undefined) {
+      const editFood: Food = location.state.editFood;
+      // colon means variable: Type (TypeScript annotation)
+      // const editFood: Food = location.state.editFood;
+      //       ^^^^^^^^  ^^^^   ^^^^^^^^^^^^^^^^^^^^^^^^^
+      //      variable  : type    the assigning value
+      if (editFood) {
+        handleEditClick(editFood);
+        window.history.replaceState({}, document.title);
+      }
     }
   }, [location.state]);
 
