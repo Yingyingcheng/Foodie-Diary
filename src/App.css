@@ -137,10 +137,16 @@ form {
 }
 
 .calendar-title {
-  text-align: center;
   color: #be3535;
   font-weight: bold;
   font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  text-align: center;
+  min-width: 0; /* lets the middle text shrink */
 }
 
 .calendar-weekdays {
@@ -283,13 +289,13 @@ form {
 
 .modal-dateheader {
   color: brown;
-  font-size: x-large;
+  font-size: large;
 }
 
 .modal-list {
   display: flex;
   text-align: left;
-  font-size: 20px;
+  font-size: 15px;
   background-color: #f7eed1;
   color: #601818d7;
   border: 1px solid #601818d7;
@@ -407,7 +413,7 @@ form {
 /* Calendar page modal cards */
 .modal-summary-card {
   margin-top: 5px;
-  font-size: 20px;
+  font-size: 15px;
   color: #473e21;
   padding: 20px;
   border-radius: 12px;
