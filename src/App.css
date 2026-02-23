@@ -258,15 +258,15 @@ form {
 }
 
 .modal-content {
-  height: 225px;
-  width: 300px;
+  height: 550px;
+  width: 500px;
   background-color: rgb(239, 228, 215);
   border-radius: 10px;
   position: relative;
-  padding: 20px;
+  padding: 30px;
+  margin-top: 80px;
   max-height: 300px;
   overflow-y: auto;
-  font-size: medium;
 }
 
 .modal-close-btn {
@@ -281,26 +281,29 @@ form {
   background-color: #957a4dc4;
 }
 
-/* .modal-close-btn:hover {
-  color: white;
-  background-color: #957a4dc4;
-} */
-
 .modal-dateheader {
   color: brown;
-  font-size: large;
+  font-size: x-large;
 }
 
 .modal-list {
   display: flex;
   text-align: left;
+  font-size: 20px;
+  background-color: #f7eed1;
+  color: #601818d7;
+  border: 1px solid #601818d7;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10px;
+  box-shadow: 0 2px 10px rgba(216, 130, 130, 0.1);
 }
 
 .modal-action-buttons {
   display: flex;
   gap: 8px;
   position: absolute;
-  right: 10px;
+  right: 40px;
   margin-top: 10px;
 }
 
@@ -313,17 +316,23 @@ form {
   height: 15px;
 }
 
+.modal-editbutton:hover {
+  background-color: #4f3629;
+  color: #f7eed1;
+}
+
 .modal-deletebutton {
   color: #392218aa;
-  background-color: rgb(255, 254, 226);
+  background-color: rgb(255, 215, 217);
   font-size: small;
   padding: 10px;
   max-width: fit-content;
   height: 15px;
 }
-.food-item {
-  color: #601818d7;
-  font-size: small;
+
+.modal-deletebutton:hover {
+  background-color: #4f3629;
+  color: #f7eed1;
 }
 
 .ImageUpload {
@@ -398,7 +407,7 @@ form {
 /* Calendar page modal cards */
 .modal-summary-card {
   margin-top: 5px;
-  font-size: 0.8rem;
+  font-size: 20px;
   color: #473e21;
   padding: 20px;
   border-radius: 12px;
@@ -418,14 +427,12 @@ form {
   display: flex;
   justify-content: space-between;
   margin-bottom: 5px;
-  font-size: 0.9rem;
 }
 
 .summary-result {
   text-align: center;
   font-weight: bold;
   margin-top: 10px;
-  font-size: 1rem;
 }
 
 hr {

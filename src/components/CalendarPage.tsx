@@ -187,7 +187,7 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
                       </ul>
                       <div className="modal-action-buttons">
                         {
-                          // When CalendarPage runs:  navigate("/diary", { state: { editFood: food } })
+                          // When CalendarPage runs: navigate("/diary", { state: { editFood: food } })
                           // React Router builds a location object like:
                           // pathname: "/diary",
                           // search: "",
