@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./../App.css";
 import type { Food } from "../type";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { LayoutPage } from "./LayoutPage";
+import { useLocation } from "react-router";
 import { v4 as uuidv4 } from "uuid";
 import Typewriter from "typewriter-effect";
 
@@ -25,6 +26,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     selectedProtein * 4 + selectedCarbs * 4 + selectedFat * 9;
   const [file, setFile] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false); // 01.21.2026 新增 Loading 狀態
+  const location = useLocation();
 
   function handleEditClick(food: Food) {
     setInputValue(food.name);
@@ -58,10 +60,13 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     setFoods(editFoods);
   }
 
-  function handleDelete(isDeletingId: string) {
-    const deleteFoods = foods.filter((food) => food.id !== isDeletingId);
-    setFoods(deleteFoods);
-  }
+  useEffect(() => {
+    const editFood = location.state?.editFood as Food | undefined;
+    if (editFood) {
+      handleEditClick(editFood);
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   function handleNewSubmit() {
     const newFood = {
@@ -260,7 +265,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             <option value="RESTAURANT">RESTAURANT</option>
             <option value="OTHERS">OTHERS</option>
           </select>
-          <textarea //改成textarea components
+          <textarea
             className="textarea"
             value={inputValue}
             placeholder="Write it down...🥨"
@@ -336,40 +341,6 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
           <h4>Your Total Calorie: {totalCalorie}</h4>
           <button className="submitbutton">Submit</button>
         </form>
-        <div className="scroll">
-          {foods.map((food) => (
-            <div className="list">
-              <ul>
-                <li>
-                  {food.date ? `📅 ${food.date.toDateString()}` : ""} ☕{" "}
-                  {food.meal}
-                  <br />
-                  ENJOY {food.name} in {food.place} today
-                  <br />
-                  Calories: {food.calories}
-                </li>
-              </ul>
-              <button
-                className="editbutton"
-                onClick={() => {
-                  handleEditClick(food);
-                }}
-              >
-                EDIT
-              </button>
-              <button
-                className="deletebutton"
-                onClick={() => {
-                  alert(`Do you wanna delete this foodie record?`);
-                  handleDelete(food.id);
-                  alert(`You succesfully delete this foodie record!`);
-                }}
-              >
-                DELETE
-              </button>
-            </div>
-          ))}
-        </div>
       </LayoutPage>
     </>
   );
