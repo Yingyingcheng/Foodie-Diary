@@ -370,15 +370,25 @@ form {
   position: absolute;
   right: 10px;
   top: 10px;
+  z-index: 2;
+}
+
+.modal-editbutton,
+.modal-deletebutton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  width: 70px;
+  padding: 10px 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .modal-editbutton {
   color: #392218aa;
   background-color: rgb(215, 229, 239);
   font-size: small;
-  padding: 10px;
-  max-width: fit-content;
-  height: 15px;
 }
 
 .modal-editbutton:hover {
@@ -390,14 +400,25 @@ form {
   color: #392218aa;
   background-color: rgb(255, 215, 217);
   font-size: small;
-  padding: 10px;
-  max-width: fit-content;
-  height: 15px;
 }
 
 .modal-deletebutton:hover {
   background-color: #4f3629;
   color: #f7eed1;
+}
+
+/* On small screens (e.g. iPhone): put buttons below meal content so they don't overlap and are easy to tap */
+@media (max-width: 768px) {
+  .modal-list {
+    flex-direction: column;
+    padding-right: 10px;
+  }
+
+  .modal-action-buttons {
+    position: static;
+    margin-top: 12px;
+    align-self: flex-end;
+  }
 }
 
 .ImageUpload {
@@ -968,13 +989,12 @@ hr {
   margin: auto;
 }
 
-/* Add to your CSS file */
-.user-profile-nav {
-  position: absolute;
-  top: 35px;
-  right: 12px;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.plan-weekly-bar-fill.selected {
+  opacity: 1;
+  filter: brightness(1.1);
+}
+
+.plan-weekly-label.selected {
+  font-weight: 700;
+  color: lightseagreen;
 }

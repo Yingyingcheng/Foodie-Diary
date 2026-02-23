@@ -2,7 +2,7 @@ import "./../HomePage.css";
 import "./../App.css";
 import type { Food } from "../type";
 import { LayoutPage } from "./LayoutPage";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { format, startOfDay, subDays } from "date-fns";
 import Typewriter from "typewriter-effect";
 
@@ -12,6 +12,16 @@ type HomeProps = {
   foods: Food[];
   dailyGoal: number;
   macroGoals: MacroGoals;
+};
+
+type DayData = {
+  label: string;
+  dateKey: string;
+  calories: number;
+  protein: number;
+  fat: number;
+  carbs: number;
+  isToday: boolean;
 };
 
 function CalorieRing({ consumed, goal }: { consumed: number; goal: number }) {
@@ -120,26 +130,39 @@ function MacroBar({
 function WeeklyChart({
   weekData,
   goal,
+  selectedIndex,
+  onSelect,
 }: {
-  weekData: { label: string; calories: number; isToday: boolean }[];
+  weekData: DayData[];
   goal: number;
+  selectedIndex: number;
+  onSelect: (index: number) => void;
 }) {
   const maxVal = Math.max(goal, ...weekData.map((d) => d.calories), 1);
 
   return (
     <div className="plan-weekly-chart">
       <div className="plan-weekly-bars">
-        {weekData.map((day) => {
+        {weekData.map((day, index) => {
           const heightPct = (day.calories / maxVal) * 100;
           const over = day.calories > goal;
+          const isSelected = index === selectedIndex;
           return (
-            <div className="plan-weekly-col" key={day.label}>
+            <div
+              className="plan-weekly-col"
+              key={day.label}
+              onClick={() => onSelect(index)}
+              style={{
+                backgroundColor: isSelected ? "#f0f0f0" : "transparent",
+                cursor: "pointer",
+              }}
+            >
               <span className="plan-weekly-val">
                 {day.calories > 0 ? day.calories : ""}
               </span>
               <div className="plan-weekly-bar-bg">
                 <div
-                  className={`plan-weekly-bar-fill ${over ? "over" : ""} ${day.isToday ? "today" : ""}`}
+                  className={`plan-weekly-bar-fill ${over ? "over" : ""} ${isSelected ? "selected" : ""}`}
                   style={{
                     height: `${heightPct}%`,
                     transition: "height 0.5s ease",
@@ -147,7 +170,7 @@ function WeeklyChart({
                 />
               </div>
               <span
-                className={`plan-weekly-label ${day.isToday ? "today" : ""}`}
+                className={`plan-weekly-label ${isSelected ? "selected" : ""}`}
               >
                 {day.label}
               </span>
@@ -174,75 +197,72 @@ function Dashboard({
   dailyGoal: number;
   macroGoals: MacroGoals;
 }) {
-  const todayKey = format(new Date(), "yyyy-MM-dd");
-
-  const todayIntake = useMemo(() => {
-    let cal = 0,
-      prot = 0,
-      fat = 0,
-      carb = 0;
-    foods.forEach((f) => {
-      if (!f.date) return;
-      if (format(new Date(f.date), "yyyy-MM-dd") === todayKey) {
-        cal += f.calories || 0;
-        prot += f.protein || 0;
-        fat += f.fat || 0;
-        carb += f.carbs || 0;
-      }
-    });
-    return { calories: cal, protein: prot, fat, carbs: carb };
-  }, [foods, todayKey]);
-
   const weekData = useMemo(() => {
     const today = startOfDay(new Date());
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const result: { label: string; calories: number; isToday: boolean }[] = [];
+    const result: DayData[] = [];
 
     for (let i = 6; i >= 0; i--) {
       const d = subDays(today, i);
       const key = format(d, "yyyy-MM-dd");
-      let total = 0;
+      let cal = 0,
+        prot = 0,
+        fat = 0,
+        carb = 0;
       foods.forEach((f) => {
         if (!f.date) return;
         if (format(new Date(f.date), "yyyy-MM-dd") === key) {
-          total += f.calories || 0;
+          cal += f.calories || 0;
+          prot += f.protein || 0;
+          fat += f.fat || 0;
+          carb += f.carbs || 0;
         }
       });
       result.push({
         label: dayNames[d.getDay()],
-        calories: Math.round(total),
+        dateKey: key,
+        calories: Math.round(cal),
+        protein: Math.round(prot),
+        fat: Math.round(fat),
+        carbs: Math.round(carb),
         isToday: i === 0,
       });
     }
     return result;
   }, [foods]);
+  const [selectedIndex, setSelectedIndex] = useState(6);
+  const selected = weekData[selectedIndex];
 
   return (
     <div className="plan-container">
       <section className="plan-section plan-hero">
-        <h2 className="plan-section-title">Today</h2>
-        <CalorieRing consumed={todayIntake.calories} goal={dailyGoal} />
+        <h2 className="plan-section-title">
+          {selected.isToday ? "Today" : selected.label}
+        </h2>
+        <CalorieRing consumed={selected.calories} goal={dailyGoal} />
       </section>
 
       <section className="plan-section plan-macros-card">
-        <h2 className="plan-section-title">Today's Macros</h2>
+        <h2 className="plan-section-title">
+          {selected.isToday ? "Today's Macros" : `${selected.label}'s Macros`}
+        </h2>
         <MacroBar
           label="Protein"
-          current={todayIntake.protein}
+          current={selected.protein}
           goal={macroGoals.protein}
           color="#26a69a"
           unit="g"
         />
         <MacroBar
           label="Fat"
-          current={todayIntake.fat}
+          current={selected.fat}
           goal={macroGoals.fat}
           color="#ef6c00"
           unit="g"
         />
         <MacroBar
           label="Carbs"
-          current={todayIntake.carbs}
+          current={selected.carbs}
           goal={macroGoals.carbs}
           color="#f9a825"
           unit="g"
@@ -251,7 +271,12 @@ function Dashboard({
 
       <section className="plan-section plan-weekly-card">
         <h2 className="plan-section-title">This Week</h2>
-        <WeeklyChart weekData={weekData} goal={dailyGoal} />
+        <WeeklyChart
+          weekData={weekData}
+          goal={dailyGoal}
+          selectedIndex={selectedIndex}
+          onSelect={setSelectedIndex}
+        />
       </section>
     </div>
   );
