@@ -1,10 +1,19 @@
 import "./App.css";
 import { Routes, Route } from "react-router";
-import { Diary } from "./components/DiaryPage";
-import { Calendar } from "./components/CalendarPage";
-import { Home } from "./components/HomePage";
-import { Plan } from "./components/PlanPage";
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
+
+const Diary = lazy(() =>
+  import("./components/DiaryPage").then((m) => ({ default: m.Diary })),
+);
+const Calendar = lazy(() =>
+  import("./components/CalendarPage").then((m) => ({ default: m.Calendar })),
+);
+const Home = lazy(() =>
+  import("./components/HomePage").then((m) => ({ default: m.Home })),
+);
+const Plan = lazy(() =>
+  import("./components/PlanPage").then((m) => ({ default: m.Plan })),
+);
 import type { Food } from "./type";
 
 function App() {
@@ -41,46 +50,46 @@ function App() {
     carbs: number;
   }>(() => {
     const saved = localStorage.getItem("macro_goals");
-    return saved
-      ? JSON.parse(saved)
-      : { protein: 150, fat: 65, carbs: 250 };
+    return saved ? JSON.parse(saved) : { protein: 150, fat: 65, carbs: 250 };
   });
   useEffect(() => {
     localStorage.setItem("macro_goals", JSON.stringify(macroGoals));
   }, [macroGoals]);
 
   return (
-    <Routes>
-      <Route
-        path="/diary"
-        element={<Diary foods={foods} setFoods={setFoods} />}
-      />
-      <Route
-        path="/calendar"
-        element={
-          <Calendar foods={foods} setFoods={setFoods} dailyGoal={dailyGoal} />
-        }
-      />
-      <Route
-        path="/"
-        element={
-          <Home foods={foods} dailyGoal={dailyGoal} macroGoals={macroGoals} />
-        }
-      />
-      <Route
-        path="/plan"
-        element={
-          <Plan
-            foods={foods}
-            setFoods={setFoods}
-            dailyGoal={dailyGoal}
-            setDailyGoal={setDailyGoal}
-            macroGoals={macroGoals}
-            setMacroGoals={setMacroGoals}
-          />
-        }
-      />
-    </Routes>
+    <Suspense>
+      <Routes>
+        <Route
+          path="/diary"
+          element={<Diary foods={foods} setFoods={setFoods} />}
+        />
+        <Route
+          path="/calendar"
+          element={
+            <Calendar foods={foods} setFoods={setFoods} dailyGoal={dailyGoal} />
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <Home foods={foods} dailyGoal={dailyGoal} macroGoals={macroGoals} />
+          }
+        />
+        <Route
+          path="/plan"
+          element={
+            <Plan
+              foods={foods}
+              setFoods={setFoods}
+              dailyGoal={dailyGoal}
+              setDailyGoal={setDailyGoal}
+              macroGoals={macroGoals}
+              setMacroGoals={setMacroGoals}
+            />
+          }
+        />
+      </Routes>
+    </Suspense>
   );
 }
 

@@ -42,7 +42,7 @@ function CalorieRing({ consumed, goal }: { consumed: number; goal: number }) {
           cy={radius}
           r={normalizedRadius}
           fill="none"
-          stroke="rgba(255,255,255,0.25)"
+          stroke="rgba(221, 221, 221, 0.57)"
           strokeWidth={stroke}
         />
         <circle
@@ -312,7 +312,15 @@ export function Home({ foods, dailyGoal, macroGoals }: HomeProps) {
 
       <SignedIn>
         <h3 style={{ marginBottom: "6px", marginTop: "10px" }}>
-          Welcome back, {user?.firstName ?? "friend"}!
+          <Typewriter
+            options={{
+              strings: [`Welcome back, ${user?.firstName ?? "friend"}!`],
+              autoStart: true,
+              loop: true,
+              delay: 70,
+              deleteSpeed: 40,
+            }}
+          />
         </h3>
         <Dashboard
           foods={foods}
