@@ -5,7 +5,6 @@ import { LayoutPage } from "./LayoutPage";
 import { useMemo } from "react";
 import { format, startOfDay, subDays } from "date-fns";
 import Typewriter from "typewriter-effect";
-import { useUser, SignedIn, SignedOut, SignUpButton } from "@clerk/clerk-react";
 
 type MacroGoals = { protein: number; fat: number; carbs: number };
 
@@ -259,75 +258,28 @@ function Dashboard({
 }
 
 export function Home({ foods, dailyGoal, macroGoals }: HomeProps) {
-  const { user } = useUser();
-
   return (
     <LayoutPage
       title="JOURNAL WITH ME"
       subtitle="Live your healthiest life...🥑"
       backgroundImage="url(avocado1.png)"
     >
-      <SignedOut>
-        <div style={{ marginTop: "40px", lineHeight: "1.6" }}>
-          <h3 style={{ marginBottom: "10px" }}>
-            <Typewriter
-              options={{
-                strings: [
-                  "Journal your foodie story.",
-                  "Track nutrients with AI.",
-                  "Savor every healthy bite.",
-                ],
-                autoStart: true,
-                loop: true,
-                delay: 70,
-                deleteSpeed: 40,
-              }}
-            />
-          </h3>
-          <h4 style={{ opacity: 0.9, fontWeight: "400" }}>
-            Snap it, log it, and keep your healthiest life on track.
-          </h4>
-          <div style={{ marginTop: "30px" }}>
-            <SignUpButton
-              appearance={{
-                variables: {
-                  colorPrimary: "#8bc34a",
-                  colorBackground: "#ffffff",
-                  colorText: "#5d4037",
-                  borderRadius: "20px",
-                },
-                elements: {
-                  card: "shadow-none border-none",
-                  formButtonPrimary: "submitbutton",
-                },
-              }}
-            >
-              <button className="submitbutton" style={{ width: "220px" }}>
-                Start Journey 🍒
-              </button>
-            </SignUpButton>
-          </div>
-        </div>
-      </SignedOut>
-
-      <SignedIn>
-        <h3 style={{ marginBottom: "6px", marginTop: "10px" }}>
-          <Typewriter
-            options={{
-              strings: [`Welcome back, ${user?.firstName ?? "friend"}!`],
-              autoStart: true,
-              loop: true,
-              delay: 70,
-              deleteSpeed: 40,
-            }}
-          />
-        </h3>
-        <Dashboard
-          foods={foods}
-          dailyGoal={dailyGoal}
-          macroGoals={macroGoals}
+      <h3 style={{ marginBottom: "6px", marginTop: "10px" }}>
+        <Typewriter
+          options={{
+            strings: [
+              "Journal your foodie story.",
+              "Track nutrients with AI.",
+              "Savor every healthy bite.",
+            ],
+            autoStart: true,
+            loop: true,
+            delay: 70,
+            deleteSpeed: 40,
+          }}
         />
-      </SignedIn>
+      </h3>
+      <Dashboard foods={foods} dailyGoal={dailyGoal} macroGoals={macroGoals} />
     </LayoutPage>
   );
 }
