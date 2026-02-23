@@ -6,7 +6,6 @@ import { useMemo } from "react";
 import { format, startOfDay, subDays } from "date-fns";
 import Typewriter from "typewriter-effect";
 import { useUser, SignedIn, SignedOut, SignUpButton } from "@clerk/clerk-react";
-import { Link } from "react-router";
 
 type MacroGoals = { protein: number; fat: number; carbs: number };
 
