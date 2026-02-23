@@ -10,6 +10,7 @@ import {
   subMonths,
 } from "date-fns";
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router";
 import type { Food } from "./../type";
 import { LayoutPage } from "./LayoutPage";
 import Typewriter from "typewriter-effect";
@@ -21,6 +22,7 @@ type CalendarInputProps = {
 };
 
 export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
+  const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null); //for pop modal
   const firstDayOfMonth = startOfMonth(currentMonth);
@@ -183,14 +185,24 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
                           Total Calories : {food.calories}
                         </li>
                       </ul>
-                      <button
-                        className="modal-deletebutton"
-                        onClick={() => {
-                          handleDelete(food.id);
-                        }}
-                      >
-                        DELETE
-                      </button>
+                      <div className="modal-action-buttons">
+                        <button
+                          className="modal-editbutton"
+                          onClick={() => {
+                            navigate("/diary", { state: { editFood: food } });
+                          }}
+                        >
+                          EDIT
+                        </button>
+                        <button
+                          className="modal-deletebutton"
+                          onClick={() => {
+                            handleDelete(food.id);
+                          }}
+                        >
+                          DELETE
+                        </button>
+                      </div>
                     </div>
                     <br />
                   </div>

@@ -296,6 +296,23 @@ form {
   text-align: left;
 }
 
+.modal-action-buttons {
+  display: flex;
+  gap: 8px;
+  position: absolute;
+  right: 10px;
+  margin-top: 10px;
+}
+
+.modal-editbutton {
+  color: #392218aa;
+  background-color: rgb(215, 229, 239);
+  font-size: small;
+  padding: 10px;
+  max-width: fit-content;
+  height: 15px;
+}
+
 .modal-deletebutton {
   color: #392218aa;
   background-color: rgb(255, 254, 226);
@@ -303,9 +320,6 @@ form {
   padding: 10px;
   max-width: fit-content;
   height: 15px;
-  position: absolute;
-  right: 10px;
-  margin-top: 10px;
 }
 .food-item {
   color: #601818d7;

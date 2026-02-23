@@ -52,7 +52,7 @@ export function Plan({
             loop: true,
             delay: 50,
             deleteSpeed: 35,
-            cursor: "|",
+            cursor: "🍑",
           }}
         />
       }
