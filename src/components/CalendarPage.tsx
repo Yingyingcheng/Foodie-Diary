@@ -167,36 +167,32 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
                   default:
                     emoji = "";
                 }
+                const mealLabel = food.meal
+                  .toLowerCase()
+                  .replace(/\b\w/g, (c) => c.toUpperCase());
                 return (
                   <div key={food.id} className="food-item">
                     <div className="modal-list">
-                      <ul>
-                        <li>
-                          {emoji}
-                          {food.meal}
-                          <br />
-                          <br />
-                          {food.name} in {food.place}
-                          <br />
-                          <br />
-                          Fat(g) : {food.fat} <br />
-                          Carbs(g) : {food.carbs} <br />
-                          Protein(g) : {food.protein} <br />
-                          Total Calories : {food.calories}
-                        </li>
-                      </ul>
+                      <div className="meal-card">
+                        <div className="meal-card-header">
+                          <span className="meal-emoji">{emoji}</span>
+                          <span className="meal-type">{mealLabel}</span>
+                          <span className="meal-place"> at {food.place}</span>
+                        </div>
+                        <div className="meal-card-dish">
+                          <span className="meal-name">{food.name}</span>
+                        </div>
+                        <div className="meal-card-nutrition">
+                          <span>Fat {food.fat}g</span>
+                          <span>Carbs {food.carbs}g</span>
+                          <span>Protein {food.protein}g</span>
+                          <br></br>
+                          <span className="meal-calories">
+                            Total Calories: {food.calories} kcal
+                          </span>
+                        </div>
+                      </div>
                       <div className="modal-action-buttons">
-                        {
-                          // When CalendarPage runs: navigate("/diary", { state: { editFood: food } })
-                          // React Router builds a location object like:
-                          // pathname: "/diary",
-                          // search: "",
-                          // hash: "",
-                          // { state: { editFood: food } }
-                          //         ^^^^^^^^     ^^^^
-                          //         key     :     value (the actual food variable)
-                          // colon(:) means key: value (making an object)
-                        }
                         <button
                           className="modal-editbutton"
                           onClick={() => {
@@ -305,52 +301,6 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
                     return `${emoji} ${food.meal}`;
                   })}
                 </div>
-
-                {/* Expanded meals list
-                {expandedDates[dateKey] && (
-                  <div className="meals-list">
-                    {todaysFoods.map((food) => {
-                      let emoji = "";
-                      switch (food.meal.toUpperCase()) {
-                        case "BREAKFAST":
-                          emoji = "🍳";
-                          break;
-                        case "LUNCH":
-                          emoji = "🥗";
-                          break;
-                        case "BRUNCH":
-                          emoji = "🥞";
-                          break;
-                        case "DINNER":
-                          emoji = "🍛";
-                          break;
-                        case "SNACKS":
-                          emoji = "🍩";
-                          break;
-                        case "LATE NIGHT FOOD":
-                          emoji = "🍔";
-                          break;
-                        default:
-                          emoji = "";
-                      }
-                      return (
-                        <div key={food.id} className="food-item">
-                          <span>
-                            {emoji}
-                            {food.name}
-                          </span>
-                          <br />
-                          <button
-                            onClick={() => handleDelete(food.id)}
-                            className="delete-btn"
-                          >
-                            ❌
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )} */}
               </div>
             );
           })}
