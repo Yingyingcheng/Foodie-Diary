@@ -1,120 +1,165 @@
 import "./../App.css";
 import type { Food } from "../type";
 import { LayoutPage } from "./LayoutPage";
-import { useState, useMemo } from "react";
-import "react-datepicker/dist/react-datepicker.css";
-import { format } from "date-fns";
+import { useState } from "react";
 import Typewriter from "typewriter-effect";
+
+type MacroGoals = { protein: number; fat: number; carbs: number };
 
 type PlanInputProps = {
   foods: Food[];
   setFoods: React.Dispatch<React.SetStateAction<Food[]>>;
   dailyGoal: number;
   setDailyGoal: React.Dispatch<React.SetStateAction<number>>;
+  macroGoals: MacroGoals;
+  setMacroGoals: React.Dispatch<React.SetStateAction<MacroGoals>>;
 };
-export function Plan({ foods, dailyGoal, setDailyGoal }: PlanInputProps) {
-  const [Goal, setGoal] = useState<number | "">(dailyGoal);
+
+export function Plan({
+  dailyGoal,
+  setDailyGoal,
+  macroGoals,
+  setMacroGoals,
+}: PlanInputProps) {
+  const [calGoal, setCalGoal] = useState<number | "">(dailyGoal);
+  const [proteinGoal, setProteinGoal] = useState<number | "">(
+    macroGoals.protein,
+  );
+  const [fatGoal, setFatGoal] = useState<number | "">(macroGoals.fat);
+  const [carbsGoal, setCarbsGoal] = useState<number | "">(macroGoals.carbs);
+  const [saved, setSaved] = useState(false);
 
   const handleSave = (e: React.FormEvent) => {
-    e.preventDefault(); // Stop the page from reloading
-    setDailyGoal(Number(Goal)); // Convert text into a real number before saving
-    alert("Goal updated to " + Goal + " kcal!");
+    e.preventDefault();
+    setDailyGoal(Number(calGoal) || 2000);
+    setMacroGoals({
+      protein: Number(proteinGoal) || 150,
+      fat: Number(fatGoal) || 65,
+      carbs: Number(carbsGoal) || 250,
+    });
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
   };
 
-  // 01.19.2026 Use useMemo..
-  const stats = useMemo(() => {
-    const totalsByDate: Record<string, number> = {}; // <"2026-01-20", total calories>
-
-    // Group all calories by date
-    // The Key: It takes the food's date and turns it into a standard string like "2026-01-20".
-    // Look in the folder for this date. If there's already a number there, add the new calories to it.
-    // If it's empty (|| 0), start at 0 and add the calories."
-    foods.forEach((food) => {
-      if (!food.date) return;
-      const dateKey = format(new Date(food.date), "yyyy-MM-dd");
-      totalsByDate[dateKey] =
-        (totalsByDate[dateKey] || 0) + (food.calories || 0);
-    });
-
-    const dates = Object.keys(totalsByDate); // Get a list of all dates logged
-    const totalDays = dates.length;
-
-    // How many days did they stay under the goal?
-    const successfulDays = dates.filter(
-      (date) => totalsByDate[date] <= dailyGoal,
-    ).length;
-    const successRate =
-      totalDays > 0 ? Math.round((successfulDays / totalDays) * 100) : 0;
-
-    return { totalDays, successRate, successfulDays };
-  }, [foods, dailyGoal]);
-
   return (
-    <>
-      <LayoutPage
-        title="SET YOUR GOAL"
-        subtitle={
-          <Typewriter
-            options={{
-              strings: ["Achieve your nutrition goals...."],
-              autoStart: true,
-              loop: true,
-              delay: 50,
-              deleteSpeed: 35,
-              cursor: "🍑",
-            }}
-          />
-        }
-        backgroundImage="url(peach5.png)"
-      >
-        <form className="PlanForm">
-          <h2>Daily Calorie Target</h2>
-          <label>
-            Set your Calorie Target 🍧
-            <br></br>
-            <input
-              className="inputgoal"
-              // If the goal is 0, we show an empty string so the placeholder appears
-              value={Goal === 0 ? "" : Goal}
-              placeholder="Enter your Calorie Target"
-              type="number"
-              onChange={(e) => {
-                const val = e.target.value;
-                setGoal(val === "" ? "" : Number(val));
-              }}
-            />
-          </label>
-          <button className="submitbutton" type="submit" onClick={handleSave}>
-            Save My New Goal
-          </button>
-
-          {/* 01/19/2026 Added analytics */}
-          <section className="plan-card">
-            <h3>Your Journey Stats 🍩</h3>
-            <p>Daily Goal: {dailyGoal} kcal</p>
-            <div className="stats-grid">
-              <div className="stat-box">
-                <span className="stat-label">Success Rate </span>
-                <span>🧌</span>
-                <br></br>
-                <br></br>
-                <span className="stat-number">{stats.successRate}%</span>
-              </div>
-              <div className="stat-box">
-                <span className="stat-label">Days Logged</span>
-                <span>🦁</span>
-                <br></br>
-                <br></br>
-                <span className="stat-number">{stats.totalDays} </span>
-              </div>
+    <LayoutPage
+      title="SET YOUR GOALS"
+      subtitle={
+        <Typewriter
+          options={{
+            strings: ["Define your targets, then crush them."],
+            autoStart: true,
+            loop: true,
+            delay: 50,
+            deleteSpeed: 35,
+            cursor: "|",
+          }}
+        />
+      }
+      backgroundImage="url(peach5.png)"
+    >
+      <div className="plan-container">
+        <section className="plan-section plan-goals-card">
+          <h2 className="plan-section-title">Daily Calorie Target</h2>
+          <form onSubmit={handleSave} className="plan-goals-form">
+            <div className="plan-goal-input-group">
+              <label className="plan-goal-label">
+                Calories
+                <input
+                  className="plan-goal-input plan-goal-input--cal"
+                  value={calGoal === 0 ? "" : calGoal}
+                  placeholder="2000"
+                  type="number"
+                  onChange={(e) =>
+                    setCalGoal(
+                      e.target.value === "" ? "" : Number(e.target.value),
+                    )
+                  }
+                />
+                <span className="plan-goal-unit">kcal</span>
+              </label>
             </div>
-            <p className="stat-footer">
-              You've hit your goal on ✨✨{" "}
-              <strong> {stats.successfulDays} </strong> days✨✨
-            </p>
-          </section>
-        </form>
-      </LayoutPage>
-    </>
+
+            <h2 className="plan-section-title" style={{ marginTop: "8px" }}>
+              Macro Targets
+            </h2>
+
+            <div className="plan-macro-inputs">
+              <label className="plan-goal-label plan-goal-label--macro">
+                Protein
+                <input
+                  className="plan-goal-input plan-goal-input--macro"
+                  value={proteinGoal === 0 ? "" : proteinGoal}
+                  placeholder="150"
+                  type="number"
+                  onChange={(e) =>
+                    setProteinGoal(
+                      e.target.value === "" ? "" : Number(e.target.value),
+                    )
+                  }
+                />
+                <span className="plan-goal-unit">g</span>
+              </label>
+              <label className="plan-goal-label plan-goal-label--macro">
+                Fat
+                <input
+                  className="plan-goal-input plan-goal-input--macro"
+                  value={fatGoal === 0 ? "" : fatGoal}
+                  placeholder="65"
+                  type="number"
+                  onChange={(e) =>
+                    setFatGoal(
+                      e.target.value === "" ? "" : Number(e.target.value),
+                    )
+                  }
+                />
+                <span className="plan-goal-unit">g</span>
+              </label>
+              <label className="plan-goal-label plan-goal-label--macro">
+                Carbs
+                <input
+                  className="plan-goal-input plan-goal-input--macro"
+                  value={carbsGoal === 0 ? "" : carbsGoal}
+                  placeholder="250"
+                  type="number"
+                  onChange={(e) =>
+                    setCarbsGoal(
+                      e.target.value === "" ? "" : Number(e.target.value),
+                    )
+                  }
+                />
+                <span className="plan-goal-unit">g</span>
+              </label>
+            </div>
+
+            <button className="plan-save-btn" type="submit">
+              {saved ? "Saved!" : "Save Goals"}
+            </button>
+          </form>
+        </section>
+
+        <section className="plan-section plan-current-goals">
+          <h2 className="plan-section-title">Current Goals</h2>
+          <div className="plan-stats-grid">
+            <div className="plan-stat-item">
+              <span className="plan-stat-value">{dailyGoal}</span>
+              <span className="plan-stat-desc">Calories (kcal)</span>
+            </div>
+            <div className="plan-stat-item">
+              <span className="plan-stat-value">{macroGoals.protein}</span>
+              <span className="plan-stat-desc">Protein (g)</span>
+            </div>
+            <div className="plan-stat-item">
+              <span className="plan-stat-value">{macroGoals.fat}</span>
+              <span className="plan-stat-desc">Fat (g)</span>
+            </div>
+            <div className="plan-stat-item">
+              <span className="plan-stat-value">{macroGoals.carbs}</span>
+              <span className="plan-stat-desc">Carbs (g)</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </LayoutPage>
   );
 }

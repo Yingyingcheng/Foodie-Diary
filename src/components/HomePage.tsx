@@ -1,90 +1,326 @@
 import "./../HomePage.css";
 import "./../App.css";
+import type { Food } from "../type";
 import { LayoutPage } from "./LayoutPage";
+import { useMemo } from "react";
+import { format, startOfDay, subDays } from "date-fns";
 import Typewriter from "typewriter-effect";
-import {
-  useUser,
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignUpButton,
-} from "@clerk/clerk-react";
+import { useUser, SignedIn, SignedOut, SignUpButton } from "@clerk/clerk-react";
 import { Link } from "react-router";
 
-export function Home() {
+type MacroGoals = { protein: number; fat: number; carbs: number };
+
+type HomeProps = {
+  foods: Food[];
+  dailyGoal: number;
+  macroGoals: MacroGoals;
+};
+
+function CalorieRing({ consumed, goal }: { consumed: number; goal: number }) {
+  const radius = 90;
+  const stroke = 14;
+  const normalizedRadius = radius - stroke / 2;
+  const circumference = 2 * Math.PI * normalizedRadius;
+  const remaining = Math.max(goal - consumed, 0);
+  const remainPct = goal > 0 ? Math.max(remaining / goal, 0) : 1;
+  const offset = circumference - remainPct * circumference;
+
+  let ringColor = "#7cb342";
+  let icon = "😺";
+  if (consumed > goal) {
+    ringColor = "#e53935";
+    icon = "🐕";
+  } else if (consumed / goal > 0.85) {
+    ringColor = "#fb8c00";
+    icon = "🙀";
+  }
+
+  return (
+    <div className="plan-ring-wrapper">
+      <svg width={radius * 2} height={radius * 2} className="plan-ring-svg">
+        <circle
+          cx={radius}
+          cy={radius}
+          r={normalizedRadius}
+          fill="none"
+          stroke="rgba(255,255,255,0.25)"
+          strokeWidth={stroke}
+        />
+        <circle
+          cx={radius}
+          cy={radius}
+          r={normalizedRadius}
+          fill="none"
+          stroke={ringColor}
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          style={{
+            transition: "stroke-dashoffset 0.6s ease, stroke 0.4s ease",
+            transform: "rotate(-90deg)",
+            transformOrigin: "50% 50%",
+          }}
+        />
+      </svg>
+      <div className="plan-ring-center">
+        <span className="plan-ring-icon">{icon}</span>
+        <span className="plan-ring-consumed">
+          {consumed > goal ? 0 : remaining}
+        </span>
+        <span className="plan-ring-label">kcal left</span>
+      </div>
+      <p className="plan-ring-remaining">
+        {consumed > goal
+          ? `${consumed - goal} kcal over budget!`
+          : `${consumed} of ${goal} kcal eaten`}
+      </p>
+    </div>
+  );
+}
+
+function MacroBar({
+  label,
+  current,
+  goal,
+  color,
+  unit,
+}: {
+  label: string;
+  current: number;
+  goal: number;
+  color: string;
+  unit: string;
+}) {
+  const pct = goal > 0 ? Math.min((current / goal) * 100, 100) : 0;
+  return (
+    <div className="plan-macro-row">
+      <div className="plan-macro-header">
+        <span className="plan-macro-label" style={{ color }}>
+          {label}
+        </span>
+        <span className="plan-macro-values">
+          {current}
+          {unit} / {goal}
+          {unit}
+        </span>
+      </div>
+      <div className="plan-macro-track">
+        <div
+          className="plan-macro-fill"
+          style={{
+            width: `${pct}%`,
+            backgroundColor: color,
+            transition: "width 0.5s ease",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function WeeklyChart({
+  weekData,
+  goal,
+}: {
+  weekData: { label: string; calories: number; isToday: boolean }[];
+  goal: number;
+}) {
+  const maxVal = Math.max(goal, ...weekData.map((d) => d.calories), 1);
+
+  return (
+    <div className="plan-weekly-chart">
+      <div className="plan-weekly-bars">
+        {weekData.map((day) => {
+          const heightPct = (day.calories / maxVal) * 100;
+          const over = day.calories > goal;
+          return (
+            <div className="plan-weekly-col" key={day.label}>
+              <span className="plan-weekly-val">
+                {day.calories > 0 ? day.calories : ""}
+              </span>
+              <div className="plan-weekly-bar-bg">
+                <div
+                  className={`plan-weekly-bar-fill ${over ? "over" : ""} ${day.isToday ? "today" : ""}`}
+                  style={{
+                    height: `${heightPct}%`,
+                    transition: "height 0.5s ease",
+                  }}
+                />
+              </div>
+              <span
+                className={`plan-weekly-label ${day.isToday ? "today" : ""}`}
+              >
+                {day.label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      <div
+        className="plan-weekly-goal-line"
+        style={{ bottom: `${(goal / maxVal) * 100}%` }}
+      >
+        <span className="plan-weekly-goal-tag">Goal</span>
+      </div>
+    </div>
+  );
+}
+
+function Dashboard({
+  foods,
+  dailyGoal,
+  macroGoals,
+}: {
+  foods: Food[];
+  dailyGoal: number;
+  macroGoals: MacroGoals;
+}) {
+  const todayKey = format(new Date(), "yyyy-MM-dd");
+
+  const todayIntake = useMemo(() => {
+    let cal = 0,
+      prot = 0,
+      fat = 0,
+      carb = 0;
+    foods.forEach((f) => {
+      if (!f.date) return;
+      if (format(new Date(f.date), "yyyy-MM-dd") === todayKey) {
+        cal += f.calories || 0;
+        prot += f.protein || 0;
+        fat += f.fat || 0;
+        carb += f.carbs || 0;
+      }
+    });
+    return { calories: cal, protein: prot, fat, carbs: carb };
+  }, [foods, todayKey]);
+
+  const weekData = useMemo(() => {
+    const today = startOfDay(new Date());
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const result: { label: string; calories: number; isToday: boolean }[] = [];
+
+    for (let i = 6; i >= 0; i--) {
+      const d = subDays(today, i);
+      const key = format(d, "yyyy-MM-dd");
+      let total = 0;
+      foods.forEach((f) => {
+        if (!f.date) return;
+        if (format(new Date(f.date), "yyyy-MM-dd") === key) {
+          total += f.calories || 0;
+        }
+      });
+      result.push({
+        label: dayNames[d.getDay()],
+        calories: Math.round(total),
+        isToday: i === 0,
+      });
+    }
+    return result;
+  }, [foods]);
+
+  return (
+    <div className="plan-container">
+      <section className="plan-section plan-hero">
+        <h2 className="plan-section-title">Today</h2>
+        <CalorieRing consumed={todayIntake.calories} goal={dailyGoal} />
+      </section>
+
+      <section className="plan-section plan-macros-card">
+        <h2 className="plan-section-title">Today's Macros</h2>
+        <MacroBar
+          label="Protein"
+          current={todayIntake.protein}
+          goal={macroGoals.protein}
+          color="#26a69a"
+          unit="g"
+        />
+        <MacroBar
+          label="Fat"
+          current={todayIntake.fat}
+          goal={macroGoals.fat}
+          color="#ef6c00"
+          unit="g"
+        />
+        <MacroBar
+          label="Carbs"
+          current={todayIntake.carbs}
+          goal={macroGoals.carbs}
+          color="#f9a825"
+          unit="g"
+        />
+      </section>
+
+      <section className="plan-section plan-weekly-card">
+        <h2 className="plan-section-title">This Week</h2>
+        <WeeklyChart weekData={weekData} goal={dailyGoal} />
+      </section>
+    </div>
+  );
+}
+
+export function Home({ foods, dailyGoal, macroGoals }: HomeProps) {
   const { user } = useUser();
 
   return (
-    <>
-      <LayoutPage
-        title="JOURNAL WITH ME"
-        subtitle="Live your healthiest life...🥑"
-        backgroundImage="url(avocado1.png)"
-      >
+    <LayoutPage
+      title="JOURNAL WITH ME"
+      subtitle="Live your healthiest life...🥑"
+      backgroundImage="url(avocado1.png)"
+    >
+      <SignedOut>
         <div style={{ marginTop: "40px", lineHeight: "1.6" }}>
-          {/* Main Focal Point: Dynamic Greeting */}
-          <h3
-            style={{
-              marginBottom: "10px",
-            }}
-          >
+          <h3 style={{ marginBottom: "10px" }}>
             <Typewriter
               options={{
                 strings: [
-                  user
-                    ? `Hi, ${user.firstName}! 🍎`
-                    : "Journal your foodie story.",
+                  "Journal your foodie story.",
                   "Track nutrients with AI.",
                   "Savor every healthy bite.",
                 ],
                 autoStart: true,
                 loop: true,
-                delay: 70, // Slightly slower for better readability
+                delay: 70,
                 deleteSpeed: 40,
               }}
             />
           </h3>
-
-          {/* Static Description: Easy to read immediately */}
           <h4 style={{ opacity: 0.9, fontWeight: "400" }}>
             Snap it, log it, and keep your healthiest life on track.
           </h4>
-
-          {/* Single Action Area */}
           <div style={{ marginTop: "30px" }}>
-            <SignedOut>
-              <SignUpButton
-                appearance={{
-                  variables: {
-                    colorPrimary: "#8bc34a",
-                    colorBackground: "#ffffff",
-                    colorText: "#5d4037",
-                    borderRadius: "20px",
-                  },
-                  elements: {
-                    card: "shadow-none border-none",
-                    formButtonPrimary: "submitbutton",
-                  },
-                }}
-              >
-                <button className="submitbutton" style={{ width: "220px" }}>
-                  Start Journey 🍒
-                </button>
-              </SignUpButton>
-            </SignedOut>
-
-            <SignedIn>
-              <SignInButton>
-                <Link to="/diary">
-                  <button className="submitbutton" style={{ width: "220px" }}>
-                    Open My Diary 🥑
-                  </button>{" "}
-                </Link>
-              </SignInButton>
-            </SignedIn>
+            <SignUpButton
+              appearance={{
+                variables: {
+                  colorPrimary: "#8bc34a",
+                  colorBackground: "#ffffff",
+                  colorText: "#5d4037",
+                  borderRadius: "20px",
+                },
+                elements: {
+                  card: "shadow-none border-none",
+                  formButtonPrimary: "submitbutton",
+                },
+              }}
+            >
+              <button className="submitbutton" style={{ width: "220px" }}>
+                Start Journey 🍒
+              </button>
+            </SignUpButton>
           </div>
         </div>
-      </LayoutPage>
-    </>
+      </SignedOut>
+
+      <SignedIn>
+        <h3 style={{ marginBottom: "6px", marginTop: "10px" }}>
+          Welcome back, {user?.firstName ?? "friend"}!
+        </h3>
+        <Dashboard
+          foods={foods}
+          dailyGoal={dailyGoal}
+          macroGoals={macroGoals}
+        />
+      </SignedIn>
+    </LayoutPage>
   );
 }
