@@ -798,7 +798,7 @@ hr {
 .plan-weekly-bar-fill {
   width: 100%;
   border-radius: 6px 6px 2px 2px;
-  background: #c9e1a2;
+  background: #d3e9ae;
   min-height: 2px;
 }
 
@@ -991,6 +991,7 @@ hr {
 
 .plan-weekly-bar-fill.selected {
   opacity: 1;
+  background-color: rgb(138, 199, 214);
   filter: brightness(1.1);
 }
 
