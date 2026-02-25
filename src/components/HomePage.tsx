@@ -33,7 +33,7 @@ function CalorieRing({ consumed, goal }: { consumed: number; goal: number }) {
   const remainPct = goal > 0 ? Math.max(remaining / goal, 0) : 1;
   const offset = circumference - remainPct * circumference;
 
-  let ringColor = "#7cb342";
+  let ringColor = "#c1e066";
   let icon = "😺";
   if (consumed > goal) {
     ringColor = "#e53935";

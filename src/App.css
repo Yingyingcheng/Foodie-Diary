@@ -16,7 +16,8 @@ form {
   padding: 2rem;
   text-align: center;
   border-radius: 5em;
-  background-color: rgba(255, 243, 176, 0.82);
+  /* background-color: rgba(255, 243, 176, 0.82); */
+  background-color: #fffab1;
   color: #473e21;
   display: flex;
   flex-direction: column;
@@ -132,7 +133,7 @@ form {
   margin: 0 auto;
   padding: 16px;
   border-radius: 20px;
-  background-color: #fbf3f3cd;
+  background-color: #fbf5f3;
   margin-top: 15px;
 }
 
@@ -173,7 +174,7 @@ form {
   font-size: 0.875rem;
   position: relative;
   color: #be3535;
-  background-color: #fcd4d4a5;
+  background-color: #fcd4d4ec;
 }
 
 .calendar-cell.today {
@@ -497,7 +498,7 @@ form {
   color: #473e21;
   padding: 20px;
   border-radius: 12px;
-  background: rgb(255, 225, 225);
+  background: #fad2cf;
   border: 1px solid rgba(76, 5, 5, 0.898);
 }
 .modal-summary-card.under {
@@ -537,7 +538,7 @@ hr {
 }
 
 .plan-section {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgb(255, 255, 255);
   border-radius: 20px;
   padding: 24px;
   box-shadow: 0 2px 12px rgba(120, 60, 30, 0.12);
@@ -554,7 +555,7 @@ hr {
 /* --- Calorie Ring --- */
 .plan-hero {
   text-align: center;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgb(255, 255, 255);
 }
 
 .plan-ring-wrapper {
@@ -610,7 +611,7 @@ hr {
 
 /* --- Goal Settings Card --- */
 .plan-goals-card {
-  background: rgba(255, 243, 224, 0.9);
+  background: rgba(255, 243, 224);
 }
 
 .plan-goals-form {
@@ -843,11 +844,11 @@ hr {
 
 /* --- Stats Grid --- */
 .plan-stats-card {
-  background: rgba(255, 240, 225, 0.92);
+  background: rgba(255, 240, 225);
 }
 
 .plan-current-goals {
-  background: rgba(255, 243, 224, 0.9);
+  background: rgba(255, 243, 224);
 }
 
 .plan-stats-grid {
