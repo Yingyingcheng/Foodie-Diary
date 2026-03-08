@@ -138,13 +138,12 @@ function WeeklyChart({
   selectedIndex: number;
   onSelect: (index: number) => void;
 }) {
-  const maxVal = Math.max(goal, ...weekData.map((d) => d.calories), 1);
-
+  const maxVal = goal;
   return (
     <div className="plan-weekly-chart">
       <div className="plan-weekly-bars">
         {weekData.map((day, index) => {
-          const heightPct = (day.calories / maxVal) * 100;
+          const heightPct = Math.min((day.calories / maxVal) * 100, 100);
           const over = day.calories > goal;
           const isSelected = index === selectedIndex;
           return (
