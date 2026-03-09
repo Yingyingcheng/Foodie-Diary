@@ -22,12 +22,12 @@ A personal food diary and nutrition tracking web app powered by AI. Upload a pho
 
 ## Features
 
-- **AI-Powered Meal Analysis** — Upload a photo of your food and Google Gemini estimates protein, fat, carbs, and composition automatically.
-- **Food Diary** — Log meals with name, meal type (breakfast, lunch, dinner, etc.), location, date, and macronutrient breakdown.
-- **Dashboard** — View a calorie ring showing daily remaining calories, macro progress bars, and a weekly bar chart of calorie intake.
-- **Calendar View** — Browse food entries by date on a monthly calendar. Click any day to view, edit, or delete recorded meals.
-- **Goal Setting** — Set personalized daily calorie and macronutrient (protein, fat, carbs) targets.
-- **Local Persistence** — All data is stored in the browser's localStorage — no account required.
+- **AI-Powered Meal Analysis** : Upload a photo of your food and Google Gemini estimates protein, fat, carbs, and composition automatically.
+- **Food Diary** : Log meals with name, meal type (breakfast, lunch, dinner, etc.), location, date, and macronutrient breakdown.
+- **Dashboard** : View a calorie ring showing daily remaining calories, macro progress bars, and a weekly bar chart of calorie intake.
+- **Calendar View** : Browse food entries by date on a monthly calendar. Click any day to view, edit, or delete recorded meals.
+- **Goal Setting** : Set personalized daily calorie and macronutrient (protein, fat, carbs) targets.
+- **Local Persistence** : All data is stored in the browser's localStorage, no account required.
 
 ## Tech Stack
 
@@ -42,10 +42,10 @@ A personal food diary and nutrition tracking web app powered by AI. Upload a pho
 
 ### Other Libraries
 
-- `react-datepicker` — date selection in the diary form
-- `typewriter-effect` — animated subtitle text on each page
-- `uuid` — unique IDs for food entries
-- `clsx` — conditional CSS class names
+- `react-datepicker` : date selection in the diary form
+- `typewriter-effect` : animated subtitle text on each page
+- `uuid` : unique IDs for food entries
+- `clsx` : conditional CSS class names
 
 ## Project Structure
 
@@ -80,7 +80,7 @@ my-eating-diary/
 ### Prerequisites
 
 - Node.js 18+
-- A [Google Gemini API key](https://ai.google.dev/)
+- [Google Gemini API key](https://ai.google.dev/)
 
 ### Installation
 
