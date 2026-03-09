@@ -4,8 +4,6 @@ A personal food diary and nutrition tracking web app powered by AI. Upload a pho
 
 ## Demo : [Journal With Me](https://foodiediary.vercel.app/)
 
-### Screenshots
-
 **Home Dashboard**
 
 ![Home](public/home.png)
