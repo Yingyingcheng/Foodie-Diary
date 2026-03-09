@@ -217,16 +217,17 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             e.preventDefault();
             if (isEditingId !== null) {
               handleEditSubmit();
-              alert(`You succesfully edit your foodie diary!`);
+              alert(`You successfully edited your foodie diary!`);
             } else {
               handleNewSubmit();
+              alert(`You successfully submitted your foodie diary!`);
             }
             handleResetForm();
           }}
         >
           <h2>
             {isEditingId !== null
-              ? `You are now editting your diary!`
+              ? `You are now editing your diary!`
               : `Write your foodie diary now!`}
           </h2>
           <label>
