@@ -2,7 +2,7 @@
 
 A personal food diary and nutrition tracking web app powered by AI. Upload a photo of your meal and let Google Gemini analyze its macronutrients automatically, or log entries manually. Track daily calories, set macro goals, and review your eating history on an interactive calendar.
 
-## Demo : **Live Site:** [Journal With Me](https://foodiediary.vercel.app/)
+## Demo : [Journal With Me](https://foodiediary.vercel.app/)
 
 ### Screenshots
 
