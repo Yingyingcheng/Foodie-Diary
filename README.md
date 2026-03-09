@@ -8,9 +8,17 @@ A personal food diary and nutrition tracking web app powered by AI. Upload a pho
 
 ### Screenshots
 
-|      Home Dashboard      |        Foodie Diary        |         Calendar Memory          |      Set Your Goals      |
-| :----------------------: | :------------------------: | :------------------------------: | :----------------------: |
-| ![Home](public/home.png) | ![Diary](public/diary.png) | ![Calendar](public/calendar.png) | ![Plan](public/plan.png) |
+**Home Dashboard**
+![Home](public/home.png)
+
+**Foodie Diary**
+![Diary](public/diary.png)
+
+**Calendar Memory**
+![Calendar](public/calendar.png)
+
+**Set Your Goals**
+![Plan](public/plan.png)
 
 ## Features
 
