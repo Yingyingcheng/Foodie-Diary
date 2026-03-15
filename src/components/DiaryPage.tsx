@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./../App.css";
+import "./../diary-form.css";
 import type { Food } from "../type";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";

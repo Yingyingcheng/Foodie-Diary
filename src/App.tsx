@@ -1,4 +1,4 @@
-import "./App.css";
+import "./layout.css";
 import { Routes, Route } from "react-router";
 import { lazy, Suspense, useState, useEffect } from "react";
 

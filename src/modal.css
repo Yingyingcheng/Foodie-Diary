@@ -1,0 +1,210 @@
+.modal-wrapper {
+  backdrop-filter: blur(1px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  height: 550px;
+  width: 500px;
+  background-color: rgb(239, 228, 215);
+  border-radius: 10px;
+  position: relative;
+  padding: 30px;
+  margin-top: 80px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  border-radius: 50%;
+  padding: 5px 5px;
+  width: 30px;
+  height: 30px;
+  color: white;
+  background-color: #957a4dc4;
+}
+
+.modal-dateheader {
+  color: brown;
+  font-size: large;
+}
+
+.modal-list {
+  display: flex;
+  text-align: left;
+  font-size: 15px;
+  background-color: #ffffff;
+  color: var(--modal-text);
+  border: 1px solid var(--modal-text);
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10px;
+  box-shadow: 0 2px 10px rgba(216, 130, 130, 0.1);
+  position: relative;
+  padding-right: 100px;
+}
+
+/* --- Meal Card (inside calendar modal) --- */
+
+.meal-card {
+  flex: 1;
+  min-width: 0;
+}
+
+.meal-card-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  color: var(--modal-text);
+}
+
+.meal-emoji {
+  font-size: 1.1rem;
+}
+
+.meal-type {
+  text-transform: capitalize;
+}
+
+.meal-card-dish {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.meal-name {
+  font-weight: 600;
+  color: var(--modal-text);
+}
+
+.meal-place {
+  color: #60181899;
+  font-weight: 400;
+}
+
+.meal-card-nutrition {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  font-size: 0.85rem;
+  color: var(--nutrition-brown);
+}
+
+.meal-card-nutrition span:not(.meal-calories) {
+  padding-right: 4px;
+}
+
+.meal-calories {
+  font-weight: 600;
+  color: var(--nutrition-brown);
+}
+
+/* --- Modal Action Buttons --- */
+
+.modal-action-buttons {
+  display: flex;
+  gap: 8px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 2;
+}
+
+.modal-editbutton,
+.modal-deletebutton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  width: 70px;
+  padding: 10px 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.modal-editbutton {
+  color: var(--brown-btn);
+  background-color: var(--btn-edit-bg);
+  font-size: small;
+}
+
+.modal-editbutton:hover {
+  background-color: var(--brown-darkest);
+  color: var(--cream);
+}
+
+.modal-deletebutton {
+  color: var(--brown-btn);
+  background-color: rgb(255, 215, 217);
+  font-size: small;
+}
+
+.modal-deletebutton:hover {
+  background-color: var(--brown-darkest);
+  color: var(--cream);
+}
+
+@media (max-width: 768px) {
+  .modal-list {
+    flex-direction: column;
+    padding-right: 10px;
+  }
+
+  .modal-action-buttons {
+    position: static;
+    margin-top: 12px;
+    align-self: flex-end;
+  }
+}
+
+/* --- Daily Summary Card (calendar modal) --- */
+
+.modal-summary-card {
+  margin-top: 5px;
+  font-size: 15px;
+  color: var(--olive-dark);
+  padding: 20px;
+  border-radius: 12px;
+  background: #fad2cf;
+  border: 1px solid rgba(76, 5, 5, 0.898);
+}
+
+.modal-summary-card.under {
+  border-left: 5px solid #a21212;
+}
+
+.modal-summary-card.over {
+  border-left: 5px solid #7b2300;
+  background-color: #e6d4b7;
+}
+
+.summary-stat {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.summary-result {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+hr {
+  opacity: 0.2;
+  margin: 10px 0;
+}

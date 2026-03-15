@@ -1,4 +1,4 @@
-import "./../App.css";
+import "./../plan.css";
 import type { Food } from "../type";
 import { LayoutPage } from "./LayoutPage";
 import { useState } from "react";

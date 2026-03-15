@@ -1,27 +1,58 @@
 :root {
+  /* --- Theme Palette --- */
+
+  /* Semi-transparent whites */
+  --white-soft: #ffffffc5;
+  --white-glass: #ffffffaa;
+
+  /* Browns — dark to light */
+  --brown-darkest: #4f3629;
+  --brown-dark: #5d3a1a;
+  --brown: #6d4b3a;
+  --brown-medium: #8a6a50;
+  --brown-muted: #9e7a5a;
+  --brown-btn: #392218aa;
+  --brown-input: #643927c3;
+  --olive-dark: #473e21;
+
+  /* Cream / Warm whites */
+  --cream: #f7eed1;
+  --cream-light: #fff3ed;
+
+  /* Calendar red */
+  --calendar-red: #be3535;
+  --modal-text: #601818d7;
+
+  /* Accent oranges */
+  --accent: #e08a50;
+  --accent-dark: #d4713a;
+
+  /* Utility colors */
+  --nutrition-brown: rgb(135, 110, 85);
+  --btn-edit-bg: rgb(215, 229, 239);
+
+  /* --- Global Defaults --- */
   color: white;
-  background-color: #ffffffc5;
+  background-color: var(--white-soft);
   font-family: "Special Elite", system-ui, serif;
 }
 
 button,
 .button-link {
-  /* 1. Reset Appearance (iOS/Safari fix) */
   appearance: none;
   -webkit-appearance: none;
 
   border-radius: 8px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
 
   font-size: 1em;
   font-weight: 500;
-  font-family: inherit; /* Inherits "Special Elite" from :root */
+  font-family: inherit;
   color: black;
   text-decoration: none;
 
   cursor: pointer;
-  background-color: #ffffffc5;
+  background-color: var(--white-soft);
   transition: all 0.25s ease;
 
   width: 150px;
@@ -34,9 +65,14 @@ button,
 
 button:hover,
 .button-link:hover {
-  background-color: #ffffff;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  background-color: rgb(96, 45, 20);
+  cursor: pointer;
+  transition: none;
 }
+
 .navlink.active > button {
   background-color: rgb(205, 176, 129);
-  color: "white";
+  color: white;
 }

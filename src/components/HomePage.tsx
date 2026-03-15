@@ -1,5 +1,4 @@
-import "./../HomePage.css";
-import "./../App.css";
+import "./../plan.css";
 import type { Food } from "../type";
 import { LayoutPage } from "./LayoutPage";
 import { useMemo, useState } from "react";
