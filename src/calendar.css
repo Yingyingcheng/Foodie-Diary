@@ -52,6 +52,10 @@
   color: var(--cream-light);
 }
 
+.calendar-cell.today.hasfoods {
+  background-color: var(--calendar-red);
+  color: var(--cream-light);
+}
 .calendar-cell.hasfoods {
   background-color: var(--cream);
 }
@@ -112,7 +116,7 @@
 }
 
 .calendar-cell.today.hasfoods .date-number:hover {
-  background-color: #eb7474;
-  color: var(--cream-light);
+  background-color: var(--cream);
+  color: var(--calendar-red);
   padding: 2px;
 }
