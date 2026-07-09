@@ -1,9 +1,9 @@
-import "./../plan.css";
 import type { Food } from "../type";
 import { LayoutPage } from "./LayoutPage";
 import { useMemo, useState } from "react";
 import { format, startOfDay, subDays } from "date-fns";
 import Typewriter from "typewriter-effect";
+import { planContainer, planSection, planSectionTitle } from "../ui";
 
 type MacroGoals = { protein: number; fat: number; carbs: number };
 
@@ -43,8 +43,8 @@ function CalorieRing({ consumed, goal }: { consumed: number; goal: number }) {
   }
 
   return (
-    <div className="plan-ring-wrapper">
-      <svg width={radius * 2} height={radius * 2} className="plan-ring-svg">
+    <div className="group flex flex-col items-center relative">
+      <svg width={radius * 2} height={radius * 2} className="block">
         <circle
           cx={radius}
           cy={radius}
@@ -70,14 +70,16 @@ function CalorieRing({ consumed, goal }: { consumed: number; goal: number }) {
           }}
         />
       </svg>
-      <div className="plan-ring-center">
-        <span className="plan-ring-icon">{icon}</span>
-        <span className="plan-ring-consumed">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-center pointer-events-none">
+        <span className="block text-[1.6rem] leading-none mb-[2px] transition-transform duration-300 group-hover:scale-125">
+          {icon}
+        </span>
+        <span className="block text-[2rem] font-bold text-brown-dark leading-none">
           {consumed > goal ? 0 : remaining}
         </span>
-        <span className="plan-ring-label">kcal left</span>
+        <span className="text-[0.85rem] text-brown-muted">kcal left</span>
       </div>
-      <p className="plan-ring-remaining">
+      <p className="mt-1 text-[0.9rem] text-[#8a6040]">
         {consumed > goal
           ? `${consumed - goal} kcal over budget!`
           : `${consumed} of ${goal} kcal eaten`}
@@ -101,20 +103,20 @@ function MacroBar({
 }) {
   const pct = goal > 0 ? Math.min((current / goal) * 100, 100) : 0;
   return (
-    <div className="plan-macro-row">
-      <div className="plan-macro-header">
-        <span className="plan-macro-label" style={{ color }}>
+    <div className="flex flex-col gap-1">
+      <div className="flex justify-between items-baseline">
+        <span className="font-bold text-[0.85rem]" style={{ color }}>
           {label}
         </span>
-        <span className="plan-macro-values">
+        <span className="text-[0.8rem] text-brown-medium">
           {current}
           {unit} / {goal}
           {unit}
         </span>
       </div>
-      <div className="plan-macro-track">
+      <div className="h-2.5 rounded-md bg-[rgba(0,0,0,0.06)] overflow-hidden">
         <div
-          className="plan-macro-fill"
+          className="h-full rounded-md"
           style={{
             width: `${pct}%`,
             backgroundColor: color,
@@ -139,15 +141,15 @@ function WeeklyChart({
 }) {
   const maxVal = goal;
   return (
-    <div className="plan-weekly-chart">
-      <div className="plan-weekly-bars">
+    <div className="relative pt-2.5">
+      <div className="flex justify-between items-end gap-1.5 h-[140px]">
         {weekData.map((day, index) => {
           const heightPct = Math.min((day.calories / maxVal) * 100, 100);
           const over = day.calories > goal;
           const isSelected = index === selectedIndex;
           return (
             <div
-              className="plan-weekly-col"
+              className="flex-1 flex flex-col items-center gap-1 h-full"
               key={day.label}
               onClick={() => onSelect(index)}
               style={{
@@ -155,12 +157,18 @@ function WeeklyChart({
                 cursor: "pointer",
               }}
             >
-              <span className="plan-weekly-val">
+              <span className="text-[0.6rem] text-brown-muted min-h-3.5">
                 {day.calories > 0 ? day.calories : ""}
               </span>
-              <div className="plan-weekly-bar-bg">
+              <div className="flex-1 w-full max-w-9 rounded-[6px_6px_2px_2px] bg-[rgba(0,0,0,0.04)] relative overflow-hidden flex items-end">
                 <div
-                  className={`plan-weekly-bar-fill ${over ? "over" : ""} ${isSelected ? "selected" : ""}`}
+                  className={`w-full rounded-[6px_6px_2px_2px] min-h-[2px] ${
+                    isSelected
+                      ? "bg-[rgb(138,199,214)] brightness-110"
+                      : over
+                        ? "bg-[#e57a3a]"
+                        : "bg-[#d3e9ae]"
+                  }`}
                   style={{
                     height: `${heightPct}%`,
                     transition: "height 0.5s ease",
@@ -168,7 +176,11 @@ function WeeklyChart({
                 />
               </div>
               <span
-                className={`plan-weekly-label ${isSelected ? "selected" : ""}`}
+                className={`text-[0.7rem] ${
+                  isSelected
+                    ? "font-bold text-[rgb(138,199,214)]"
+                    : "text-brown-muted"
+                }`}
               >
                 {day.label}
               </span>
@@ -177,10 +189,12 @@ function WeeklyChart({
         })}
       </div>
       <div
-        className="plan-weekly-goal-line"
+        className="absolute left-0 right-0 border-t-2 border-dashed border-[rgba(180,100,50,0.35)] pointer-events-none"
         style={{ bottom: `${(goal / maxVal) * 100}%` }}
       >
-        <span className="plan-weekly-goal-tag">Goal</span>
+        <span className="absolute right-0 -top-4 text-[0.6rem] text-[#b06830] font-bold">
+          Goal
+        </span>
       </div>
     </div>
   );
@@ -232,16 +246,16 @@ function Dashboard({
   const selected = weekData[selectedIndex];
 
   return (
-    <div className="plan-container">
-      <section className="plan-section plan-hero">
-        <h2 className="plan-section-title">
+    <div className={planContainer}>
+      <section className={`${planSection} bg-[#f8f8f3] text-center`}>
+        <h2 className={planSectionTitle}>
           {selected.isToday ? "Today" : selected.label}
         </h2>
         <CalorieRing consumed={selected.calories} goal={dailyGoal} />
       </section>
 
-      <section className="plan-section plan-macros-card">
-        <h2 className="plan-section-title">
+      <section className={`${planSection} bg-[#f8f8f3] flex flex-col gap-3.5`}>
+        <h2 className={planSectionTitle}>
           {selected.isToday ? "Today's Macros" : `${selected.label}'s Macros`}
         </h2>
         <MacroBar
@@ -267,8 +281,8 @@ function Dashboard({
         />
       </section>
 
-      <section className="plan-section plan-weekly-card">
-        <h2 className="plan-section-title">This Week</h2>
+      <section className={`${planSection} bg-[#f8f8f3] overflow-visible`}>
+        <h2 className={planSectionTitle}>This Week</h2>
         <WeeklyChart
           weekData={weekData}
           goal={dailyGoal}

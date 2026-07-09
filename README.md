@@ -34,7 +34,7 @@ A personal food diary and nutrition tracking web app powered by AI. Upload a pho
 | Layer         | Technology                                                                |
 | ------------- | ------------------------------------------------------------------------- |
 | Frontend      | React 19, TypeScript, Vite                                                |
-| Styling       | Custom CSS, Material UI                                                   |
+| Styling       | Tailwind CSS v4                                                           |
 | Routing       | React Router v7                                                           |
 | AI Backend    | Google Gemini API (gemini-3-flash-preview) via Vercel Serverless Function |
 | Date Handling | date-fns                                                                  |
@@ -65,9 +65,8 @@ my-eating-diary/
 │   ├── App.tsx               # Root component with routes and state
 │   ├── type.ts               # TypeScript type definitions
 │   ├── main.tsx              # Entry point
-│   ├── App.css               # Global styles
-│   ├── index.css             # Base styles
-│   └── HomePage.css          # Dashboard-specific styles
+│   ├── ui.ts                 # Shared Tailwind class strings
+│   └── index.css             # Tailwind entry: theme tokens + base styles
 ├── index.html
 ├── vercel.json               # Vercel SPA rewrite config
 ├── vite.config.ts

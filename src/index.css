@@ -1,78 +1,86 @@
-:root {
-  /* --- Theme Palette --- */
+@import "tailwindcss";
+
+@theme {
+  /* --- Theme Palette (same tokens as the original design) --- */
 
   /* Semi-transparent whites */
-  --white-soft: #ffffffc5;
-  --white-glass: #ffffffaa;
+  --color-white-soft: #ffffffc5;
+  --color-white-glass: #ffffffaa;
 
   /* Browns — dark to light */
-  --brown-darkest: #4f3629;
-  --brown-dark: #5d3a1a;
-  --brown: #6d4b3a;
-  --brown-medium: #8a6a50;
-  --brown-muted: #9e7a5a;
-  --brown-btn: #392218aa;
-  --brown-input: #643927c3;
-  --olive-dark: #473e21;
+  --color-brown-darkest: #4f3629;
+  --color-brown-dark: #5d3a1a;
+  --color-brown: #6d4b3a;
+  --color-brown-medium: #8a6a50;
+  --color-brown-muted: #9e7a5a;
+  --color-brown-btn: #392218aa;
+  --color-brown-input: #643927c3;
+  --color-olive-dark: #473e21;
 
   /* Cream / Warm whites */
-  --cream: #f7eed1;
-  --cream-light: #fff3ed;
+  --color-cream: #f7eed1;
+  --color-cream-light: #fff3ed;
 
   /* Calendar red */
-  --calendar-red: #be3535;
-  --modal-text: #601818d7;
+  --color-calendar-red: #be3535;
+  --color-modal-text: #601818d7;
 
   /* Accent oranges */
-  --accent: #e08a50;
-  --accent-dark: #d4713a;
+  --color-accent: #e08a50;
+  --color-accent-dark: #d4713a;
 
   /* Utility colors */
-  --nutrition-brown: rgb(135, 110, 85);
-  --btn-edit-bg: rgb(215, 229, 239);
+  --color-nutrition-brown: rgb(135 110 85);
+  --color-btn-edit: rgb(215 229 239);
 
-  /* --- Global Defaults --- */
-  color: white;
-  background-color: var(--white-soft);
-  font-family: "Special Elite", system-ui, serif;
+  /* Font */
+  --font-elite: "Special Elite", system-ui, serif;
 }
 
-button,
-.button-link {
-  appearance: none;
-  -webkit-appearance: none;
+@layer base {
+  /* Preserve the pre-Tailwind browser defaults the design was built on */
+  html {
+    line-height: normal;
+  }
 
-  border-radius: 8px;
-  border: 1px solid transparent;
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+  }
 
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: black;
-  text-decoration: none;
+  body {
+    color: white;
+    background-color: var(--color-white-soft);
+    font-family: var(--font-elite);
+  }
 
-  cursor: pointer;
-  background-color: var(--white-soft);
-  transition: all 0.25s ease;
+  /* Restore browser-default heading/paragraph rhythm removed by Preflight */
+  h1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin-block: 0.67em;
+  }
 
-  width: 150px;
-  height: 40px;
-  padding: 0;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-}
+  h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-block: 0.83em;
+  }
 
-button:hover,
-.button-link:hover {
-  font-weight: bold;
-  color: rgb(255, 255, 255);
-  background-color: rgb(96, 45, 20);
-  cursor: pointer;
-  transition: none;
-}
+  h3 {
+    font-size: 1.17em;
+    font-weight: bold;
+    margin-block: 1em;
+  }
 
-.navlink.active > button {
-  background-color: rgb(205, 176, 129);
-  color: white;
+  h4 {
+    font-size: 1em;
+    font-weight: bold;
+    margin-block: 1.33em;
+  }
+
+  p {
+    margin-block: 1em;
+  }
 }

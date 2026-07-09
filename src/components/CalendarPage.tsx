@@ -1,5 +1,3 @@
-import "./../calendar.css";
-import "./../modal.css";
 import clsx from "clsx";
 import {
   addMonths,
@@ -23,6 +21,12 @@ type CalendarInputProps = {
   dailyGoal: number;
 };
 
+const calendarNavBtn =
+  "appearance-none w-[150px] h-10 inline-flex items-center justify-center bg-transparent border-none cursor-pointer text-[0.7rem] px-2 py-0 text-inherit font-medium transition-all duration-[250ms] hover:text-[#ff9a9a] hover:font-bold hover:bg-[rgb(96,45,20)] hover:transition-none";
+
+const modalActionBtn =
+  "appearance-none inline-flex items-center justify-center h-9 w-[70px] px-3.5 py-2.5 rounded-lg border border-transparent cursor-pointer text-[13px] font-medium text-brown-btn transition-all duration-[250ms] hover:bg-brown-darkest hover:text-cream hover:font-bold hover:transition-none";
+
 export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
   const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -45,9 +49,6 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
     }, {});
   }, [foods]);
 
-  {
-    /* 01/18/2026 */
-  }
   const selectedDateKcal = useMemo(() => {
     if (!selectedDateKey) return { total: 0, remaining: 0 };
     const dayFoods = foodsByDate[selectedDateKey] || [];
@@ -76,7 +77,6 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
   }
 
   function toggleDate(dateKey: string) {
-    // setExpandedDates((prev) => ({ ...prev, [dateKey]: !prev[dateKey] }));
     setSelectedDateKey(dateKey);
   }
 
@@ -101,10 +101,10 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
       backgroundImage="url(cherry1.png)"
     >
       {selectedDateKey && (
-        <div className="modal-wrapper">
-          <div className="modal-content">
+        <div className="backdrop-blur-[1px] fixed top-0 left-0 h-screen w-screen bg-[rgba(0,0,0,0.4)] z-[100] flex items-center justify-center">
+          <div className="w-[500px] bg-[rgb(239,228,215)] rounded-[10px] relative p-[30px] mt-20 max-h-[300px] overflow-y-auto">
             <button
-              className="modal-close-btn"
+              className="appearance-none absolute top-[15px] right-2.5 rounded-full p-[5px] w-[30px] h-[30px] text-white bg-[#957a4dc4] border border-transparent cursor-pointer inline-flex items-center justify-center font-medium transition-all duration-[250ms] hover:font-bold hover:bg-[rgb(96,45,20)] hover:transition-none"
               aria-label="Close"
               type="button"
               onClick={() => {
@@ -124,24 +124,26 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
                 <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>
             </button>
-            <div className="modal-dateheader">📅 {selectedDateKey}</div>
+            <div className="text-[brown] text-lg">📅 {selectedDateKey}</div>
             {/* 01/18/2026 */}
             <div
               className={clsx(
-                "modal-summary-card",
-                selectedDateKcal.remaining < 0 ? "over" : "under",
+                "mt-[5px] text-[15px] text-olive-dark p-5 rounded-xl border border-[rgba(76,5,5,0.898)] border-l-[5px]",
+                selectedDateKcal.remaining < 0
+                  ? "bg-[#e6d4b7] border-l-[#7b2300]"
+                  : "bg-[#fad2cf] border-l-[#a21212]",
               )}
             >
-              <div className="summary-stat">
+              <div className="flex justify-between mb-[5px]">
                 <span>Daily Total: </span>
                 <strong>{selectedDateKcal.total} kcal</strong>
               </div>
-              <div className="summary-stat">
+              <div className="flex justify-between mb-[5px]">
                 <span>Target: </span>
                 <span>{dailyGoal} kcal</span>
               </div>
-              <hr />
-              <div className="summary-result">
+              <hr className="opacity-20 my-2.5" />
+              <div className="text-center font-bold mt-2.5">
                 {isNaN(selectedDateKcal.remaining)
                   ? "Calculating..."
                   : selectedDateKcal.remaining < 0
@@ -149,7 +151,7 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
                     : `You have ${selectedDateKcal.remaining} kcal remaining 🙂‍↔️`}
               </div>
             </div>
-            <div className="meals-list">
+            <div className="flex flex-col gap-[1px] text-[0.6rem] relative">
               {(foodsByDate[selectedDateKey] || []).map((food) => {
                 let emoji = "";
                 switch (food.meal.toUpperCase()) {
@@ -178,30 +180,35 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
                   .toLowerCase()
                   .replace(/\b\w/g, (c) => c.toUpperCase());
                 return (
-                  <div key={food.id} className="food-item">
-                    <div className="modal-list">
-                      <div className="meal-card">
-                        <div className="meal-card-header">
-                          <span className="meal-emoji">{emoji}</span>
-                          <span className="meal-type">{mealLabel}</span>
-                          <span className="meal-place"> at {food.place}</span>
+                  <div key={food.id}>
+                    <div className="flex max-md:flex-col text-left text-[15px] bg-white text-modal-text border border-modal-text rounded-[10px] p-2.5 pr-[100px] max-md:pr-2.5 mt-2.5 shadow-[0_2px_10px_rgba(216,130,130,0.1)] relative">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 font-semibold text-base mb-1.5 text-modal-text">
+                          <span className="text-[1.1rem]">{emoji}</span>
+                          <span className="capitalize">{mealLabel}</span>
+                          <span className="text-[#60181899] font-normal">
+                            {" "}
+                            at {food.place}
+                          </span>
                         </div>
-                        <div className="meal-card-dish">
-                          <span className="meal-name">{food.name}</span>
+                        <div className="mb-2 text-[0.95rem]">
+                          <span className="font-semibold text-modal-text">
+                            {food.name}
+                          </span>
                         </div>
-                        <div className="meal-card-nutrition">
-                          <span>Fat {food.fat}g</span>
-                          <span>Carbs {food.carbs}g</span>
-                          <span>Protein {food.protein}g</span>
+                        <div className="flex flex-wrap gap-y-2 gap-x-3 text-[0.85rem] text-nutrition-brown">
+                          <span className="pr-1">Fat {food.fat}g</span>
+                          <span className="pr-1">Carbs {food.carbs}g</span>
+                          <span className="pr-1">Protein {food.protein}g</span>
                           <br></br>
-                          <span className="meal-calories">
+                          <span className="font-semibold">
                             Total Calories: {food.calories} kcal
                           </span>
                         </div>
                       </div>
-                      <div className="modal-action-buttons">
+                      <div className="flex gap-2 absolute right-2.5 top-2.5 z-[2] max-md:static max-md:mt-3 max-md:self-end">
                         <button
-                          className="modal-editbutton"
+                          className={`${modalActionBtn} bg-btn-edit`}
                           onClick={() => {
                             navigate("/diary", { state: { editFood: food } });
                           }}
@@ -209,7 +216,7 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
                           EDIT
                         </button>
                         <button
-                          className="modal-deletebutton"
+                          className={`${modalActionBtn} bg-[rgb(255,215,217)]`}
                           onClick={() => {
                             handleDelete(food.id);
                           }}
@@ -226,18 +233,18 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
           </div>
         </div>
       )}
-      <div className="calendar-container">
+      <div className="max-w-[550px] mx-auto p-4 rounded-[20px] bg-[#fbf5f3] mt-[15px]">
         {/* Month navigation */}
-        <h2 className="calendar-title">
+        <h2 className="text-calendar-red font-bold text-2xl flex items-center justify-center gap-2 flex-nowrap text-center min-w-0">
           <button
-            className="calendar-nav-btn"
+            className={calendarNavBtn}
             onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
           >
             ◀
           </button>
           {format(currentMonth, "MMMM yyyy")}
           <button
-            className="calendar-nav-btn"
+            className={calendarNavBtn}
             onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
           >
             ▶
@@ -245,44 +252,58 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
         </h2>
 
         {/* Weekday headers */}
-        <div className="calendar-weekdays">
+        <div className="grid grid-cols-7 gap-2 font-bold text-calendar-red">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <div key={day}>{day}</div>
           ))}
         </div>
 
         {/* Calendar grid */}
-        <div className="calendar-grid">
+        <div className="grid grid-cols-7 gap-2">
           {/* Empty cells before the first day of the month */}
           {Array.from({ length: startingDayIndex }).map((_, index) => (
-            <div key={`empty-${index}`} className="calendar-cell empty" />
+            <div
+              key={`empty-${index}`}
+              className="border-2 border-white rounded-md p-2 min-h-[30px] max-h-[60px] overflow-y-auto text-sm relative text-calendar-red bg-transparent"
+            />
           ))}
 
           {/* Days of the month */}
           {daysInMonth.map((day, index) => {
             const dateKey = format(day, "yyyy-MM-dd");
             const todaysFoods = foodsByDate[dateKey] || [];
+            const hasFoods = todaysFoods.length > 0;
+            const today = isToday(day);
 
             return (
               <div
                 key={index}
                 className={clsx(
-                  "calendar-cell",
-                  isToday(day) && "today",
-                  todaysFoods.length > 0 && "hasfoods",
+                  "border-2 border-white rounded-md p-2 min-h-[30px] max-h-[60px] overflow-y-auto text-sm relative",
+                  today
+                    ? "bg-calendar-red text-cream-light"
+                    : hasFoods
+                      ? "bg-cream text-calendar-red"
+                      : "bg-[#fcd4d4ec] text-calendar-red",
                 )}
               >
                 {/* Date number */}
                 <div
-                  className="date-number"
+                  className={clsx(
+                    "date-number font-bold mb-1 cursor-pointer",
+                    hasFoods && "bg-[rgba(255,207,167,0.7)] rounded-[30%] p-[2px]",
+                    hasFoods &&
+                      (today
+                        ? "hover:bg-cream hover:text-calendar-red"
+                        : "hover:bg-[rgba(255,175,255,0.566)]"),
+                  )}
                   onClick={() => toggleDate(dateKey)}
                 >
                   {format(day, "d")}
                 </div>
 
                 {/* Summary view when collapsed */}
-                {/* {!expandedDates[dateKey] && todaysFoods.length > 0 && ( */}
-                <div className="meals-summary">
+                <div>
                   {todaysFoods.map((food) => {
                     let emoji = "";
                     switch (food.meal.toUpperCase()) {

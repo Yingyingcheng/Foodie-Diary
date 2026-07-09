@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "./../diary-form.css";
 import type { Food } from "../type";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -214,6 +213,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
         backgroundImage="url(lemon.png)"
       >
         <form
+          className="max-w-[550px] h-[450px] max-h-[80%] overflow-y-scroll mx-auto mt-[15px] p-8 text-center rounded-[5em] bg-[#f0e6a4] text-olive-dark flex flex-col gap-[9px] items-center max-md:max-w-[90%] max-md:h-auto max-md:rounded-[2em]"
           onSubmit={(e) => {
             e.preventDefault();
             if (isEditingId !== null) {
@@ -239,14 +239,14 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
               id="Test_DatetimeLocal"
             /> */}
             <DatePicker
-              className="calendar"
+              className="bg-white-glass border border-white-glass rounded-[20px]"
               showIcon
               selected={selectedDate}
               onChange={handleSelectDate}
             />
           </label>
           <select
-            className="dropdownmenu"
+            className="font-elite w-[20em] max-w-[95%] h-auto min-h-[3em] rounded-[1em] text-center border-none bg-[#ffffffc3] text-[#643927aa] text-base m-auto"
             value={selectedMeal}
             onChange={(e) => {
               setSelectedMeal(e.target.value);
@@ -260,7 +260,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             <option value="LATE NIGHT FOOD"> LATE NIGHT FOOD</option>
           </select>
           <select
-            className="dropdownmenu"
+            className="font-elite w-[20em] max-w-[95%] h-auto min-h-[3em] rounded-[1em] text-center border-none bg-[#ffffffc3] text-[#643927aa] text-base m-auto"
             value={selectedPlace}
             onChange={(e) => {
               setSelectedPlace(e.target.value);
@@ -274,14 +274,13 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             <option value="OTHERS">OTHERS</option>
           </select>
           <textarea
-            className="textarea"
+            className="font-elite shrink-0 w-[20em] max-w-[95%] h-auto min-h-[4em] rounded-[1em] text-center border-none bg-white-glass text-brown-input font-bold text-base"
             value={inputValue}
             placeholder="Write it down...🥨"
             onChange={(e) => setInputValue(e.target.value)}
           />
 
-          <div className="UploadSection">
-            {/* */}
+          <div>
             <input
               id="ImageUpload"
               type="file"
@@ -289,32 +288,36 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
               accept="image/*"
               onChange={handleImageUpload}
             />
-            {/* */}
-            <label htmlFor="ImageUpload" className="ContainerButton">
-              <div className="ImageContainer">
+            <label htmlFor="ImageUpload" className="cursor-pointer block m-auto">
+              <div className="relative w-full max-w-[250px] aspect-square my-2.5 mx-auto flex flex-col items-center justify-center text-center border-2 border-dashed border-[#ccc] rounded-[20px] shadow-[0_4px_15px_rgba(0,0,0,0.1)] overflow-hidden bg-[whitesmoke] transition-all duration-300 cursor-pointer hover:bg-[rgba(246,236,209,0.845)] hover:-translate-y-0.5">
                 {file ? (
-                  <img className="resizeImage" src={file} alt="Image preview" />
+                  <img
+                    className="w-full h-auto"
+                    src={file}
+                    alt="Image preview"
+                  />
                 ) : (
-                  <div className="ImagePlaceholder">
+                  <div className="text-[#999] text-[0.9rem]">
                     <span style={{ fontSize: "1.5rem" }}>📸</span>
                     <p>Upload a Photo to Calculate</p>
                   </div>
                 )}
-                {/*  */}
                 {isLoading && (
-                  <div className="LoadingOverlay">
-                    <div className="Spinner"></div>
-                    <p>Analyzing your calories...</p>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[rgba(255,243,176,0.88)] rounded-[20px] z-10">
+                    <div className="w-9 h-9 border-4 border-[#e0d5c0] border-t-brown rounded-full animate-spin [animation-duration:0.8s]"></div>
+                    <p className="m-0 text-[0.9rem] text-brown font-bold">
+                      Analyzing your calories...
+                    </p>
                   </div>
                 )}
               </div>
             </label>
           </div>
           <div style={{ display: "flex", gap: 10 }}>
-            <label className="proteinlabel">
+            <label>
               Protein(g):
               <input
-                className="proteinarea"
+                className="font-elite w-[5em] max-w-[95%] h-8 rounded-[1em] text-center border-none bg-white-glass text-brown-input font-bold m-auto"
                 value={selectedProtein}
                 placeholder="Protein(g)"
                 onChange={(e) =>
@@ -325,7 +328,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             <label>
               Fat(g):
               <input
-                className="fatarea"
+                className="font-elite w-[5em] max-w-[95%] h-8 rounded-[1em] text-center border-none bg-white-glass text-brown-input font-bold m-auto"
                 value={selectedFat}
                 placeholder="Fat(g)"
                 onChange={(e) =>
@@ -336,7 +339,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             <label>
               Carbs(g):
               <input
-                className="carbsarea"
+                className="font-elite w-[5em] max-w-[95%] h-8 rounded-[1em] text-center border-none bg-white-glass text-brown-input font-bold m-auto"
                 value={selectedCarbs}
                 placeholder="Carbs(g)"
                 onChange={(e) =>
@@ -347,7 +350,9 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
           </div>
           {/* <button onClick={handleCalorieCalculator}>Calculate Calories</button> */}
           <h4>Your Total Calorie: {totalCalorie}</h4>
-          <button className="submitbutton">Submit</button>
+          <button className="appearance-none inline-flex items-center justify-center min-w-[180px] h-10 min-h-[30px] p-0 rounded-lg border border-transparent text-[1em] font-medium text-black bg-white-soft cursor-pointer transition-all duration-[250ms] hover:font-bold hover:text-white hover:bg-[rgb(96,45,20)] hover:transition-none">
+            Submit
+          </button>
         </form>
       </LayoutPage>
     </>

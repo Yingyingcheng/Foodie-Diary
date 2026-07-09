@@ -1,8 +1,8 @@
-import "./../plan.css";
 import type { Food } from "../type";
 import { LayoutPage } from "./LayoutPage";
 import { useState } from "react";
 import Typewriter from "typewriter-effect";
+import { planContainer, planSection, planSectionTitle } from "../ui";
 
 type MacroGoals = { protein: number; fat: number; carbs: number };
 
@@ -14,6 +14,12 @@ type PlanInputProps = {
   macroGoals: MacroGoals;
   setMacroGoals: React.Dispatch<React.SetStateAction<MacroGoals>>;
 };
+
+const goalLabel =
+  "flex flex-col items-center gap-1.5 text-[#7a5035] font-bold";
+
+const goalInput =
+  "font-elite text-center rounded-xl border-2 border-[rgba(180,120,70,0.25)] bg-[#ffffffcc] text-brown-dark font-bold outline-none transition-[border-color] duration-200 focus:border-accent";
 
 export function Plan({
   dailyGoal,
@@ -58,15 +64,15 @@ export function Plan({
       }
       backgroundImage="url(peach5.png)"
     >
-      <div className="plan-container">
-        <section className="plan-section plan-goals-card">
-          <h2 className="plan-section-title">Daily Calorie Target</h2>
-          <form onSubmit={handleSave} className="plan-goals-form">
-            <div className="plan-goal-input-group">
-              <label className="plan-goal-label">
+      <div className={planContainer}>
+        <section className={`${planSection} bg-[rgb(255,243,224)]`}>
+          <h2 className={planSectionTitle}>Daily Calorie Target</h2>
+          <form onSubmit={handleSave} className="flex flex-col gap-4">
+            <div className="text-center">
+              <label className={`${goalLabel} text-[0.85rem]`}>
                 Calories
                 <input
-                  className="plan-goal-input plan-goal-input--cal"
+                  className={`${goalInput} w-[9em] h-[2.4em] text-[1.3rem]`}
                   value={calGoal === 0 ? "" : calGoal}
                   placeholder="2000"
                   type="number"
@@ -76,19 +82,19 @@ export function Plan({
                     )
                   }
                 />
-                <span className="plan-goal-unit">kcal</span>
+                <span className="text-xs text-[#a08060]">kcal</span>
               </label>
             </div>
 
-            <h2 className="plan-section-title" style={{ marginTop: "8px" }}>
+            <h2 className={planSectionTitle} style={{ marginTop: "8px" }}>
               Macro Targets
             </h2>
 
-            <div className="plan-macro-inputs">
-              <label className="plan-goal-label plan-goal-label--macro">
+            <div className="flex justify-center gap-4 max-md:gap-2">
+              <label className={`${goalLabel} text-[0.8rem]`}>
                 Protein
                 <input
-                  className="plan-goal-input plan-goal-input--macro"
+                  className={`${goalInput} w-[5em] max-md:w-[4.5em] h-[2.2em] text-base`}
                   value={proteinGoal === 0 ? "" : proteinGoal}
                   placeholder="150"
                   type="number"
@@ -98,12 +104,12 @@ export function Plan({
                     )
                   }
                 />
-                <span className="plan-goal-unit">g</span>
+                <span className="text-xs text-[#a08060]">g</span>
               </label>
-              <label className="plan-goal-label plan-goal-label--macro">
+              <label className={`${goalLabel} text-[0.8rem]`}>
                 Fat
                 <input
-                  className="plan-goal-input plan-goal-input--macro"
+                  className={`${goalInput} w-[5em] max-md:w-[4.5em] h-[2.2em] text-base`}
                   value={fatGoal === 0 ? "" : fatGoal}
                   placeholder="65"
                   type="number"
@@ -113,12 +119,12 @@ export function Plan({
                     )
                   }
                 />
-                <span className="plan-goal-unit">g</span>
+                <span className="text-xs text-[#a08060]">g</span>
               </label>
-              <label className="plan-goal-label plan-goal-label--macro">
+              <label className={`${goalLabel} text-[0.8rem]`}>
                 Carbs
                 <input
-                  className="plan-goal-input plan-goal-input--macro"
+                  className={`${goalInput} w-[5em] max-md:w-[4.5em] h-[2.2em] text-base`}
                   value={carbsGoal === 0 ? "" : carbsGoal}
                   placeholder="250"
                   type="number"
@@ -128,34 +134,53 @@ export function Plan({
                     )
                   }
                 />
-                <span className="plan-goal-unit">g</span>
+                <span className="text-xs text-[#a08060]">g</span>
               </label>
             </div>
 
-            <button className="plan-save-btn" type="submit">
+            <button
+              className="appearance-none inline-flex items-center justify-center w-[150px] h-10 self-center font-elite border-none rounded-[14px] bg-linear-135 from-accent to-accent-dark text-white text-base font-bold cursor-pointer shadow-[0_3px_10px_rgba(200,100,40,0.25)] transition-[transform,box-shadow] duration-150 hover:-translate-y-0.5 hover:shadow-[0_5px_16px_rgba(200,100,40,0.35)]"
+              type="submit"
+            >
               {saved ? "Saved!" : "Save Goals"}
             </button>
           </form>
         </section>
 
-        <section className="plan-section plan-current-goals">
-          <h2 className="plan-section-title">Current Goals</h2>
-          <div className="plan-stats-grid">
-            <div className="plan-stat-item">
-              <span className="plan-stat-value">{dailyGoal}</span>
-              <span className="plan-stat-desc">Calories (kcal)</span>
+        <section className={`${planSection} bg-[rgb(255,243,224)]`}>
+          <h2 className={planSectionTitle}>Current Goals</h2>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="text-center px-2 py-4 rounded-[14px] bg-[rgba(255,255,255,0.6)] shadow-[0_2px_8px_rgba(150,80,30,0.08)]">
+              <span className="block text-[1.8rem] font-bold text-accent-dark leading-[1.1]">
+                {dailyGoal}
+              </span>
+              <span className="block text-xs text-brown-medium mt-1 uppercase tracking-[0.04em]">
+                Calories (kcal)
+              </span>
             </div>
-            <div className="plan-stat-item">
-              <span className="plan-stat-value">{macroGoals.protein}</span>
-              <span className="plan-stat-desc">Protein (g)</span>
+            <div className="text-center px-2 py-4 rounded-[14px] bg-[rgba(255,255,255,0.6)] shadow-[0_2px_8px_rgba(150,80,30,0.08)]">
+              <span className="block text-[1.8rem] font-bold text-accent-dark leading-[1.1]">
+                {macroGoals.protein}
+              </span>
+              <span className="block text-xs text-brown-medium mt-1 uppercase tracking-[0.04em]">
+                Protein (g)
+              </span>
             </div>
-            <div className="plan-stat-item">
-              <span className="plan-stat-value">{macroGoals.fat}</span>
-              <span className="plan-stat-desc">Fat (g)</span>
+            <div className="text-center px-2 py-4 rounded-[14px] bg-[rgba(255,255,255,0.6)] shadow-[0_2px_8px_rgba(150,80,30,0.08)]">
+              <span className="block text-[1.8rem] font-bold text-accent-dark leading-[1.1]">
+                {macroGoals.fat}
+              </span>
+              <span className="block text-xs text-brown-medium mt-1 uppercase tracking-[0.04em]">
+                Fat (g)
+              </span>
             </div>
-            <div className="plan-stat-item">
-              <span className="plan-stat-value">{macroGoals.carbs}</span>
-              <span className="plan-stat-desc">Carbs (g)</span>
+            <div className="text-center px-2 py-4 rounded-[14px] bg-[rgba(255,255,255,0.6)] shadow-[0_2px_8px_rgba(150,80,30,0.08)]">
+              <span className="block text-[1.8rem] font-bold text-accent-dark leading-[1.1]">
+                {macroGoals.carbs}
+              </span>
+              <span className="block text-xs text-brown-medium mt-1 uppercase tracking-[0.04em]">
+                Carbs (g)
+              </span>
             </div>
           </div>
         </section>
