@@ -57,7 +57,22 @@ function App() {
   }, [macroGoals]);
 
   return (
-    <Suspense>
+    <Suspense
+      fallback={
+        <div
+          style={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#6d4b3a",
+            fontFamily: '"Special Elite", system-ui, serif',
+          }}
+        >
+          Loading...
+        </div>
+      }
+    >
       <Routes>
         <Route
           path="/diary"

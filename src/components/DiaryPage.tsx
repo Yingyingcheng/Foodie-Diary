@@ -93,7 +93,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
   function handleResetForm() {
     setInputValue("");
     setSelectedMeal("BREAKFAST");
-    setSelectedPlace("CAFE");
+    setSelectedPlace("HOME SWEET HOME");
     setSelectedDate(new Date());
     setIsEditingId(null);
     setSelectedProtein(0);
@@ -170,13 +170,14 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
 
           console.log(`Detected: ${output.composition}`);
         }
-      } catch (error: any) {
+      } catch (error) {
         console.error("AI analysis failure:", error);
-        if (error.message === "QUOTA_EXCEEDED") {
+        const message = error instanceof Error ? error.message : "";
+        if (message === "QUOTA_EXCEEDED") {
           alert(
             "The AI is taking a break! (Free Tier limit reached). Please try again in 1 minute. ☕",
           );
-        } else if (error.message === "SERVER_OVERLOADED") {
+        } else if (message === "SERVER_OVERLOADED") {
           alert(
             "The AI server is too busy right now. Please try uploading again.",
           );
