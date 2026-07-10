@@ -29,7 +29,14 @@ export default async function handler(req, res) {
           role: "user",
           parts: [
             {
-              text: 'Analyze this meal. Return ONLY JSON: { "protein": number, "carb": number, "fat": number, "composition": "string" }',
+              text: `Analyze this meal photo. Return ONLY JSON:
+{ "protein": number, "carb": number, "fat": number, "composition": "string" }
+Rules for "composition":
+- List the main food items, one per line, each prefixed with "- ".
+- Max 10 items, each 3-6 words. Brief descriptors are fine
+  (e.g. "- Udon soup with tofu & egg", "- Glazed teriyaki chicken").
+- No full sentences. Never write phrases like "The meal consists of".
+- Separate lines using the \\n escape inside the JSON string so the JSON stays valid.`,
             },
             { inlineData: { data: cleanImage, mimeType: "image/jpeg" } },
           ],

@@ -14,6 +14,8 @@ import { useNavigate } from "react-router";
 import type { Food } from "./../type";
 import { LayoutPage } from "./LayoutPage";
 import Typewriter from "typewriter-effect";
+import { ConfirmDialog } from "./ConfirmDialog";
+import { Toast } from "./Toast";
 
 type CalendarInputProps = {
   foods: Food[];
@@ -50,6 +52,8 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
   const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const firstDayOfMonth = startOfMonth(currentMonth);
   const lastDayOfMonth = endOfMonth(currentMonth);
   const daysInMonth = eachDayOfInterval({
@@ -89,24 +93,30 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
     Math.round((selectedTotal / goal) * 100),
   );
 
-  // Escape key closes the panel
+  // Escape closes the confirm dialog first, then the day panel
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setSelectedDateKey(null);
+      if (e.key !== "Escape") return;
+      if (pendingDeleteId !== null) {
+        setPendingDeleteId(null);
+      } else {
+        setSelectedDateKey(null);
+      }
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [pendingDeleteId]);
 
-  function handleDelete(id: string) {
-    if (confirm("Do you wanna delete this foodie record?")) {
-      const dayFoods = selectedDateKey
-        ? (foodsByDate[selectedDateKey] ?? [])
-        : [];
-      setFoods((prev) => prev.filter((food) => food.id !== id));
-      if (dayFoods.length <= 1) setSelectedDateKey(null);
-      alert(`You successfully deleted this foodie record!`);
-    }
+  function confirmDelete() {
+    if (!pendingDeleteId) return;
+    const dayFoods = selectedDateKey
+      ? (foodsByDate[selectedDateKey] ?? [])
+      : [];
+    setFoods((prev) => prev.filter((food) => food.id !== pendingDeleteId));
+    // Close the panel when the last meal of the day is removed
+    if (dayFoods.length <= 1) setSelectedDateKey(null);
+    setPendingDeleteId(null);
+    setToast("You successfully deleted this foodie record!");
   }
 
   return (
@@ -307,7 +317,7 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
                       </span>
                     </div>
                     <div className="mb-2 text-[0.95rem]">
-                      <span className="font-semibold text-modal-text">
+                      <span className="font-semibold text-modal-text whitespace-pre-line">
                         {food.name}
                       </span>
                     </div>
@@ -331,7 +341,7 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
                       </button>
                       <button
                         className={`${panelActionBtn} bg-[rgb(255,215,217)]`}
-                        onClick={() => handleDelete(food.id)}
+                        onClick={() => setPendingDeleteId(food.id)}
                       >
                         DELETE
                       </button>
@@ -355,6 +365,13 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
           </div>
         )}
       </div>
+      <ConfirmDialog
+        open={pendingDeleteId !== null}
+        message="Do you wanna delete this foodie record?"
+        onCancel={() => setPendingDeleteId(null)}
+        onConfirm={confirmDelete}
+      />
+      <Toast message={toast} onClose={() => setToast(null)} />
     </LayoutPage>
   );
 }

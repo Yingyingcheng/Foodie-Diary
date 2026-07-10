@@ -6,6 +6,7 @@ import { LayoutPage } from "./LayoutPage";
 import { useLocation } from "react-router";
 import { v4 as uuidv4 } from "uuid";
 import Typewriter from "typewriter-effect";
+import { Toast } from "./Toast";
 
 type DiaryInputProps = {
   foods: Food[];
@@ -25,6 +26,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     selectedProtein * 4 + selectedCarbs * 4 + selectedFat * 9;
   const [file, setFile] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false); // 01.21.2026 新增 Loading 狀態
+  const [toast, setToast] = useState<string | null>(null);
   const location = useLocation();
 
   function handleEditClick(food: Food) {
@@ -176,15 +178,17 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
         console.error("AI analysis failure:", error);
         const message = error instanceof Error ? error.message : "";
         if (message === "QUOTA_EXCEEDED") {
-          alert(
+          setToast(
             "The AI is taking a break! (Free Tier limit reached). Please try again in 1 minute. ☕",
           );
         } else if (message === "SERVER_OVERLOADED") {
-          alert(
+          setToast(
             "The AI server is too busy right now. Please try uploading again.",
           );
         } else {
-          alert("Could not recognize this meal. Please try a clearer photo!");
+          setToast(
+            "Could not recognize this meal. Please try a clearer photo!",
+          );
         }
       } finally {
         setIsLoading(false);
@@ -221,10 +225,10 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             e.preventDefault();
             if (isEditingId !== null) {
               handleEditSubmit();
-              alert(`You successfully edited your foodie diary!`);
+              setToast("You successfully edited your foodie diary!");
             } else {
               handleNewSubmit();
-              alert(`You successfully submitted your foodie diary!`);
+              setToast("You successfully submitted your foodie diary!");
             }
             handleResetForm();
           }}
@@ -360,6 +364,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             Submit
           </button>
         </form>
+        <Toast message={toast} onClose={() => setToast(null)} />
       </LayoutPage>
     </>
   );
