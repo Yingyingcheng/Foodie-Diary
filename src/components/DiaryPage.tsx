@@ -69,6 +69,9 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
       if (editFood) {
         handleEditClick(editFood);
         window.history.replaceState({}, document.title);
+      } else if (location.state.presetDate) {
+        setSelectedDate(new Date(location.state.presetDate + "T12:00:00"));
+        window.history.replaceState({}, document.title);
       }
     }
   }, [location.state]);
@@ -288,7 +291,10 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
               accept="image/*"
               onChange={handleImageUpload}
             />
-            <label htmlFor="ImageUpload" className="cursor-pointer block m-auto">
+            <label
+              htmlFor="ImageUpload"
+              className="cursor-pointer block m-auto"
+            >
               <div className="relative w-full max-w-[250px] aspect-square my-2.5 mx-auto flex flex-col items-center justify-center text-center border-2 border-dashed border-[#ccc] rounded-[20px] shadow-[0_4px_15px_rgba(0,0,0,0.1)] overflow-hidden bg-[whitesmoke] transition-all duration-300 cursor-pointer hover:bg-[rgba(246,236,209,0.845)] hover:-translate-y-0.5">
                 {file ? (
                   <img

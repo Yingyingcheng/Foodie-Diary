@@ -8,4 +8,5 @@ export type Food = {
   fat: number;
   carbs: number;
   calories: number;
+  image?: string;
 };
