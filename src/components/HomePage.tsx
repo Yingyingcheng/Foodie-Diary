@@ -298,24 +298,25 @@ export function Home({ foods, dailyGoal, macroGoals }: HomeProps) {
   return (
     <LayoutPage
       title="JOURNAL WITH ME"
-      subtitle="Live your healthiest life...🥑"
-      backgroundImage="url(avocado1.png)"
-    >
-      <h3 style={{ marginBottom: "6px", marginTop: "10px" }}>
+      subtitle={
         <Typewriter
           options={{
             strings: [
-              "Journal your foodie story.",
-              "Track nutrients with AI.",
-              "Savor every healthy bite.",
+              "Journal your foodie story...",
+              "Track nutrients with AI...",
+              "Savor every healthy bite...",
             ],
             autoStart: true,
             loop: true,
-            delay: 70,
-            deleteSpeed: 40,
+            delay: 50,
+            deleteSpeed: 35,
+            cursor: "🥑",
           }}
         />
-      </h3>
+      }
+      backgroundImage="url(avocado1.png)"
+    >
+      <h3 style={{ marginBottom: "6px", marginTop: "10px" }}></h3>
       <Dashboard foods={foods} dailyGoal={dailyGoal} macroGoals={macroGoals} />
     </LayoutPage>
   );
