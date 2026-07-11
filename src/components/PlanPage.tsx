@@ -1,7 +1,7 @@
 import type { Food } from "../type";
 import { LayoutPage } from "./LayoutPage";
 import { useState } from "react";
-import Typewriter from "typewriter-effect";
+import { CatBadge } from "./CatBadge";
 import { planContainer, planSection, planSectionTitle } from "../ui";
 
 type MacroGoals = { protein: number; fat: number; carbs: number };
@@ -50,23 +50,12 @@ export function Plan({
   return (
     <LayoutPage
       title="SET YOUR GOALS"
-      subtitle={
-        <Typewriter
-          options={{
-            strings: ["Define your targets, then crush them."],
-            autoStart: true,
-            loop: true,
-            delay: 50,
-            deleteSpeed: 35,
-            cursor: "🍑",
-          }}
-        />
-      }
       backgroundImage="url(peach5.png)"
     >
       <div className={planContainer}>
         <section className={`${planSection} bg-[rgb(255,243,224)]`}>
-          <h2 className={planSectionTitle}>Daily Calorie Target</h2>
+          <CatBadge src="ginger-cat-fruit-peach.png" ringColor="#e08a4e" />
+          <h2 className={`${planSectionTitle} mt-3`}>Daily Calorie Target</h2>
           <form onSubmit={handleSave} className="flex flex-col gap-4">
             <div className="text-center">
               <label className={`${goalLabel} text-[0.85rem]`}>
@@ -145,44 +134,6 @@ export function Plan({
               {saved ? "Saved!" : "Save Goals"}
             </button>
           </form>
-        </section>
-
-        <section className={`${planSection} bg-[rgb(255,243,224)]`}>
-          <h2 className={planSectionTitle}>Current Goals</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="text-center px-2 py-4 rounded-[14px] bg-[rgba(255,255,255,0.6)] shadow-[0_2px_8px_rgba(150,80,30,0.08)]">
-              <span className="block text-[1.8rem] font-bold text-accent-dark leading-[1.1]">
-                {dailyGoal}
-              </span>
-              <span className="block text-xs text-brown-medium mt-1 uppercase tracking-[0.04em]">
-                Calories (kcal)
-              </span>
-            </div>
-            <div className="text-center px-2 py-4 rounded-[14px] bg-[rgba(255,255,255,0.6)] shadow-[0_2px_8px_rgba(150,80,30,0.08)]">
-              <span className="block text-[1.8rem] font-bold text-accent-dark leading-[1.1]">
-                {macroGoals.protein}
-              </span>
-              <span className="block text-xs text-brown-medium mt-1 uppercase tracking-[0.04em]">
-                Protein (g)
-              </span>
-            </div>
-            <div className="text-center px-2 py-4 rounded-[14px] bg-[rgba(255,255,255,0.6)] shadow-[0_2px_8px_rgba(150,80,30,0.08)]">
-              <span className="block text-[1.8rem] font-bold text-accent-dark leading-[1.1]">
-                {macroGoals.fat}
-              </span>
-              <span className="block text-xs text-brown-medium mt-1 uppercase tracking-[0.04em]">
-                Fat (g)
-              </span>
-            </div>
-            <div className="text-center px-2 py-4 rounded-[14px] bg-[rgba(255,255,255,0.6)] shadow-[0_2px_8px_rgba(150,80,30,0.08)]">
-              <span className="block text-[1.8rem] font-bold text-accent-dark leading-[1.1]">
-                {macroGoals.carbs}
-              </span>
-              <span className="block text-xs text-brown-medium mt-1 uppercase tracking-[0.04em]">
-                Carbs (g)
-              </span>
-            </div>
-          </div>
         </section>
       </div>
     </LayoutPage>

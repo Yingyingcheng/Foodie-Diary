@@ -2,7 +2,6 @@ import type { Food } from "../type";
 import { LayoutPage } from "./LayoutPage";
 import { useMemo, useState } from "react";
 import { format, startOfDay, subDays } from "date-fns";
-import Typewriter from "typewriter-effect";
 import { planContainer, planSection, planSectionTitle } from "../ui";
 
 type MacroGoals = { protein: number; fat: number; carbs: number };
@@ -25,61 +24,71 @@ type DayData = {
 
 function CalorieRing({ consumed, goal }: { consumed: number; goal: number }) {
   const radius = 90;
-  const stroke = 14;
+  const stroke = 6;
   const normalizedRadius = radius - stroke / 2;
   const circumference = 2 * Math.PI * normalizedRadius;
   const remaining = Math.max(goal - consumed, 0);
   const remainPct = goal > 0 ? Math.max(remaining / goal, 0) : 1;
   const offset = circumference - remainPct * circumference;
 
-  let ringColor = "#eae09f";
-  let icon = "😺";
+  let ringColor = "#4886a3";
   if (consumed > goal) {
     ringColor = "#e53935";
-    icon = "🐕";
   } else if (consumed / goal > 0.85) {
     ringColor = "#fb8c00";
-    icon = "🙀";
   }
+
+  // Inner edge of the ring, so the cat portrait fits snugly inside it
+  const innerDiameter = (normalizedRadius - stroke / 2) * 2;
 
   return (
     <div className="group flex flex-col items-center relative">
-      <svg width={radius * 2} height={radius * 2} className="block">
-        <circle
-          cx={radius}
-          cy={radius}
-          r={normalizedRadius}
-          fill="none"
-          stroke="rgba(221, 221, 221, 0.57)"
-          strokeWidth={stroke}
+      <div
+        className="relative"
+        style={{ width: radius * 2, height: radius * 2 }}
+      >
+        <img
+          src="ginger-cat-v2-floof.png"
+          alt=""
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full object-cover object-top select-none transition-transform duration-300 group-hover:scale-105"
+          style={{ width: innerDiameter, height: innerDiameter }}
         />
-        <circle
-          cx={radius}
-          cy={radius}
-          r={normalizedRadius}
-          fill="none"
-          stroke={ringColor}
-          strokeWidth={stroke}
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          style={{
-            transition: "stroke-dashoffset 0.6s ease, stroke 0.4s ease",
-            transform: "rotate(-90deg)",
-            transformOrigin: "50% 50%",
-          }}
-        />
-      </svg>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-center pointer-events-none">
-        <span className="block text-[1.6rem] leading-none mb-[2px] transition-transform duration-300 group-hover:scale-125">
-          {icon}
+        <svg width={radius * 2} height={radius * 2} className="block relative">
+          <circle
+            cx={radius}
+            cy={radius}
+            r={normalizedRadius}
+            fill="none"
+            stroke="rgba(221, 221, 221, 0.57)"
+            strokeWidth={stroke}
+          />
+          <circle
+            cx={radius}
+            cy={radius}
+            r={normalizedRadius}
+            fill="none"
+            stroke={ringColor}
+            strokeWidth={stroke}
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            style={{
+              transition: "stroke-dashoffset 0.6s ease, stroke 0.4s ease",
+              transform: "rotate(-90deg)",
+              transformOrigin: "50% 50%",
+            }}
+          />
+        </svg>
+        <span
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 px-3 py-1 rounded-full text-[0.9rem] font-bold bg-[#fdf3d1] shadow-[0_2px_8px_rgba(120,60,30,0.25)] whitespace-nowrap"
+          style={{ color: ringColor }}
+        >
+          {consumed > goal
+            ? `${consumed - goal} kcal over!`
+            : `${remaining} kcal left`}
         </span>
-        <span className="block text-[2rem] font-bold text-brown-dark leading-none">
-          {consumed > goal ? 0 : remaining}
-        </span>
-        <span className="text-[0.85rem] text-brown-muted">kcal left</span>
       </div>
-      <p className="mt-1 text-[0.9rem] text-[#8a6040]">
+      <p className="mt-3 text-[0.9rem] text-[#8a6040]">
         {consumed > goal
           ? `${consumed - goal} kcal over budget!`
           : `${consumed} of ${goal} kcal eaten`}
@@ -298,25 +307,8 @@ export function Home({ foods, dailyGoal, macroGoals }: HomeProps) {
   return (
     <LayoutPage
       title="JOURNAL WITH ME"
-      subtitle={
-        <Typewriter
-          options={{
-            strings: [
-              "Journal your foodie story...",
-              "Track nutrients with AI...",
-              "Savor every healthy bite...",
-            ],
-            autoStart: true,
-            loop: true,
-            delay: 50,
-            deleteSpeed: 35,
-            cursor: "🥑",
-          }}
-        />
-      }
       backgroundImage="url(avocado1.png)"
     >
-      <h3 style={{ marginBottom: "6px", marginTop: "10px" }}></h3>
       <Dashboard foods={foods} dailyGoal={dailyGoal} macroGoals={macroGoals} />
     </LayoutPage>
   );

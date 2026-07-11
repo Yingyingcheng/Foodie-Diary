@@ -1,5 +1,6 @@
-import { Routes, Route } from "react-router";
+import { Routes, Route, Navigate, useLocation } from "react-router";
 import { lazy, Suspense, useState, useEffect } from "react";
+import type { Session } from "@supabase/supabase-js";
 
 const Diary = lazy(() =>
   import("./components/DiaryPage").then((m) => ({ default: m.Diary })),
@@ -14,26 +15,48 @@ const Plan = lazy(() =>
   import("./components/PlanPage").then((m) => ({ default: m.Plan })),
 );
 import type { Food } from "./type";
+import { supabase } from "./lib/supabase";
+import { Login } from "./components/LoginPage";
 
 function App() {
-  const storedFood = localStorage.getItem("foods");
-  const [foods, setFoods] = useState<Food[]>(
-    storedFood
-      ? JSON.parse(storedFood, (key, value) => {
-          if (key === "date" && typeof value === "string") {
-            const date = new Date(value);
-            if (!isNaN(date.getTime())) {
-              return date;
-            }
-          }
-          return value;
-        })
-      : [],
-  );
+  const location = useLocation();
+  const [session, setSession] = useState<Session | null>(null);
+  // Wait for getSession() before rendering, so a logged-in user
+  // doesn't see the login screen flash on refresh
+  const [isAuthReady, setIsAuthReady] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("foods", JSON.stringify(foods));
-  }, [foods]);
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setIsAuthReady(true);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
+      setSession(s);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  const [foods, setFoods] = useState<Food[]>([]);
+
+  useEffect(() => {
+    if (!session) {
+      setFoods([]);
+      return;
+    }
+    supabase
+      .from("foods")
+      .select("*")
+      .order("date", { ascending: false })
+      .then(({ data }) =>
+        // Postgres returns "date" as an ISO string; the app expects Date objects
+        setFoods(
+          (data ?? []).map((food) => ({
+            ...food,
+            date: food.date ? new Date(food.date) : null,
+          })),
+        ),
+      );
+  }, [session]);
 
   const [dailyGoal, setDailyGoal] = useState<number>(() => {
     const saved = localStorage.getItem("daily_goal");
@@ -55,23 +78,35 @@ function App() {
     localStorage.setItem("macro_goals", JSON.stringify(macroGoals));
   }, [macroGoals]);
 
-  return (
-    <Suspense
-      fallback={
-        <div
-          style={{
-            minHeight: "100vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#6d4b3a",
-            fontFamily: '"Special Elite", system-ui, serif',
-          }}
-        >
-          Loading...
-        </div>
-      }
+  const loadingFallback = (
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#6d4b3a",
+        fontFamily: '"Special Elite", system-ui, serif',
+      }}
     >
+      Loading...
+    </div>
+  );
+
+  if (!isAuthReady) {
+    return loadingFallback;
+  }
+
+  if (!session) {
+    // Reset any stale URL while logged out, so login always lands on Home
+    if (location.pathname !== "/") {
+      return <Navigate to="/" replace />;
+    }
+    return <Login />;
+  }
+
+  return (
+    <Suspense fallback={loadingFallback}>
       <Routes>
         <Route
           path="/diary"
@@ -102,6 +137,7 @@ function App() {
             />
           }
         />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
   );

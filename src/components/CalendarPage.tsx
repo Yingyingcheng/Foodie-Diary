@@ -13,9 +13,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import type { Food } from "./../type";
 import { LayoutPage } from "./LayoutPage";
-import Typewriter from "typewriter-effect";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { Toast } from "./Toast";
+import { CatBadge } from "./CatBadge";
+import { supabase } from "../lib/supabase";
 
 type CalendarInputProps = {
   foods: Food[];
@@ -107,12 +108,13 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [pendingDeleteId]);
 
-  function confirmDelete() {
+  async function confirmDelete() {
     if (!pendingDeleteId) return;
     const dayFoods = selectedDateKey
       ? (foodsByDate[selectedDateKey] ?? [])
       : [];
     setFoods((prev) => prev.filter((food) => food.id !== pendingDeleteId));
+    await supabase.from("foods").delete().eq("id", pendingDeleteId);
     // Close the panel when the last meal of the day is removed
     if (dayFoods.length <= 1) setSelectedDateKey(null);
     setPendingDeleteId(null);
@@ -122,21 +124,6 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
   return (
     <LayoutPage
       title="Calendar Memory"
-      subtitle={
-        <Typewriter
-          options={{
-            strings: [
-              "Share your diary with friends...",
-              "Relive your favorite meals...✨",
-            ],
-            autoStart: true,
-            loop: true,
-            delay: 50,
-            deleteSpeed: 30,
-            cursor: "🍒",
-          }}
-        />
-      }
       backgroundImage="url(cherry1.png)"
     >
       {/* Mobile-only backdrop */}
@@ -150,6 +137,7 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
       <div className="flex justify-center items-start gap-5 mt-[15px] max-md:flex-col max-md:items-center">
         {/* Calendar card */}
         <div className="w-full max-w-[550px] p-4 rounded-[20px] bg-[#fbf5f3]">
+          <CatBadge src="ginger-cat-fruit-cherry.png" ringColor="#c94f5e" />
           {/* Month navigation */}
           <h2 className="text-calendar-red font-bold text-2xl flex items-center justify-center gap-2 flex-nowrap text-center min-w-0">
             <button

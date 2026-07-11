@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 import { NavLink } from "react-router";
 import { useState } from "react";
+import { supabase } from "../lib/supabase";
 type LayoutPageProps = {
   title: string;
-  subtitle: ReactNode;
   children: ReactNode;
   backgroundImage: string;
 };
@@ -39,7 +39,6 @@ function NavButton({
 
 export function LayoutPage({
   title,
-  subtitle,
   children,
   backgroundImage,
 }: LayoutPageProps) {
@@ -57,7 +56,6 @@ export function LayoutPage({
       style={{ backgroundImage: backgroundImage }}
     >
       <h1>{title}</h1>
-      <p>{subtitle}</p>
 
       <button
         className="md:hidden fixed top-7 right-2 z-50 flex h-10 w-10 flex-col items-center justify-center gap-[5px] rounded-lg bg-white-soft/50"
@@ -85,6 +83,12 @@ export function LayoutPage({
         {navLinks.map((link) => (
           <NavButton key={link.to} {...link} onNavigate={closeMenu} />
         ))}
+        <button
+          className={`${navBtnBase} w-auto px-4 bg-white-soft/60 text-black`}
+          onClick={() => supabase.auth.signOut()}
+        >
+          Sign Out 🗝️
+        </button>
       </nav>
 
       {/* Mobile overlay menu */}
@@ -100,6 +104,12 @@ export function LayoutPage({
             {navLinks.map((link) => (
               <NavButton key={link.to} {...link} onNavigate={closeMenu} />
             ))}
+            <button
+              className={`${navBtnBase} bg-white-soft/60 text-black`}
+              onClick={() => supabase.auth.signOut()}
+            >
+              Sign Out 🗝️
+            </button>
           </nav>{" "}
         </div>
       )}

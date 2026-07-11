@@ -5,8 +5,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import { LayoutPage } from "./LayoutPage";
 import { useLocation } from "react-router";
 import { v4 as uuidv4 } from "uuid";
-import Typewriter from "typewriter-effect";
 import { Toast } from "./Toast";
+import { CatBadge } from "./CatBadge";
+import { supabase } from "../lib/supabase";
 
 type DiaryInputProps = {
   foods: Food[];
@@ -16,7 +17,7 @@ type DiaryInputProps = {
 export function Diary({ foods, setFoods }: DiaryInputProps) {
   const [inputValue, setInputValue] = useState("");
   const [selectedMeal, setSelectedMeal] = useState("BREAKFAST"); // Declare a state variable...
-  const [selectedPlace, setSelectedPlace] = useState("HOME SWEET HOME"); // Declare a state variable...
+  const [selectedPlace, setSelectedPlace] = useState("CAFE"); // Declare a state variable...
   const [selectedDate, setSelectedDate] = useState<Food["date"]>(new Date());
   const [selectedProtein, setSelectedProtein] = useState(0);
   const [selectedFat, setSelectedFat] = useState(0);
@@ -40,7 +41,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     setSelectedCarbs(food.carbs);
   }
 
-  function handleEditSubmit() {
+  async function handleEditSubmit() {
     const editFoods = foods.map((food) => {
       if (food.id === isEditingId) {
         return {
@@ -59,6 +60,10 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
       }
     });
     setFoods(editFoods);
+    const updated = editFoods.find((f) => f.id === isEditingId);
+    if (updated) {
+      await supabase.from("foods").update(updated).eq("id", isEditingId);
+    }
   }
 
   useEffect(() => {
@@ -78,7 +83,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     }
   }, [location.state]);
 
-  function handleNewSubmit() {
+  async function handleNewSubmit() {
     const newFood = {
       id: uuidv4(),
       name: inputValue,
@@ -92,6 +97,11 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     };
     const updatedFoods = [...foods, newFood];
     setFoods(updatedFoods);
+    const result = await supabase.from("foods").insert(newFood);
+    const error = result.error;
+    if (error) {
+      setToast("Could not save to cloud: " + error.message);
+    }
   }
 
   function handleResetForm() {
@@ -103,6 +113,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     setSelectedProtein(0);
     setSelectedFat(0);
     setSelectedCarbs(0);
+    setFile(null);
   }
 
   function handleSelectDate(d: Date | null) {
@@ -199,28 +210,9 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
 
   return (
     <>
-      <LayoutPage
-        title="FOODIE DIARY"
-        subtitle={
-          <Typewriter
-            options={{
-              strings: [
-                "What you eat today...",
-                "Your foodie journey, captured...📸",
-                "What's on the menu today?",
-              ],
-              autoStart: true,
-              loop: true,
-              delay: 50,
-              deleteSpeed: 35,
-              cursor: "🍋",
-            }}
-          />
-        }
-        backgroundImage="url(lemon.png)"
-      >
+      <LayoutPage title="FOODIE DIARY" backgroundImage="url(lemon.png)">
         <form
-          className="max-w-[550px] h-[450px] max-h-[80%] overflow-y-scroll mx-auto mt-[15px] p-8 text-center rounded-[5em] bg-[#f0e6a4] text-olive-dark flex flex-col gap-[9px] items-center max-md:max-w-[90%] max-md:h-auto max-md:rounded-[2em]"
+          className="max-w-[550px] mx-auto mt-[15px] p-8 pb-6 text-center rounded-[3em] bg-[#f2e6c9] text-olive-dark flex flex-col gap-[10px] items-center max-md:max-w-[92%] max-md:p-5 max-md:rounded-[2em]"
           onSubmit={(e) => {
             e.preventDefault();
             if (isEditingId !== null) {
@@ -233,18 +225,10 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             handleResetForm();
           }}
         >
-          <h2>
-            {isEditingId !== null
-              ? `You are now editing your diary!`
-              : `Write your foodie diary now!`}
-          </h2>
+          <CatBadge src="ginger-cat-v2-windy.png" ringColor="#d9a916" />
+
+          {/* Date + meal + place, kept compact in two rows */}
           <label>
-            NOW is ...
-            {/* <input
-              
-              type="datetime-local"
-              id="Test_DatetimeLocal"
-            /> */}
             <DatePicker
               className="bg-white-glass border border-white-glass rounded-[20px]"
               showIcon
@@ -252,42 +236,39 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
               onChange={handleSelectDate}
             />
           </label>
-          <select
-            className="font-elite w-[20em] max-w-[95%] h-auto min-h-[3em] rounded-[1em] text-center border-none bg-[#ffffffc3] text-[#643927aa] text-base m-auto"
-            value={selectedMeal}
-            onChange={(e) => {
-              setSelectedMeal(e.target.value);
-            }}
-          >
-            <option value="BREAKFAST"> BREAKFAST</option>
-            <option value="BRUNCH"> BRUNCH</option>
-            <option value="LUNCH"> LUNCH</option>
-            <option value="DINNER"> DINNER</option>
-            <option value="SNACK"> SNACK</option>
-            <option value="LATE NIGHT FOOD"> LATE NIGHT FOOD</option>
-          </select>
-          <select
-            className="font-elite w-[20em] max-w-[95%] h-auto min-h-[3em] rounded-[1em] text-center border-none bg-[#ffffffc3] text-[#643927aa] text-base m-auto"
-            value={selectedPlace}
-            onChange={(e) => {
-              setSelectedPlace(e.target.value);
-            }}
-          >
-            <option value="HOME SWEET HOME">HOME SWEET HOME</option>
-            <option value="SCHOOL">SCHOOL</option>
-            <option value="OFFICE">OFFICE</option>
-            <option value="CAFE">CAFE</option>
-            <option value="RESTAURANT">RESTAURANT</option>
-            <option value="OTHERS">OTHERS</option>
-          </select>
-          <textarea
-            className="font-elite shrink-0 w-[20em] max-w-[95%] h-auto min-h-[4em] rounded-[1em] text-center border-none bg-white-glass text-brown-input font-bold text-base"
-            value={inputValue}
-            placeholder="Write it down...🥨"
-            onChange={(e) => setInputValue(e.target.value)}
-          />
+          <div className="grid grid-cols-2 gap-2 w-[24em] max-w-[95%]">
+            <select
+              className="font-elite w-full h-auto min-h-[2.6em] rounded-[1em] text-center border-none bg-[#ffffffc3] text-[#643927aa] text-[0.95rem]"
+              value={selectedMeal}
+              onChange={(e) => {
+                setSelectedMeal(e.target.value);
+              }}
+            >
+              <option value="BREAKFAST"> BREAKFAST</option>
+              <option value="BRUNCH"> BRUNCH</option>
+              <option value="LUNCH"> LUNCH</option>
+              <option value="DINNER"> DINNER</option>
+              <option value="SNACK"> SNACK</option>
+              <option value="LATE NIGHT FOOD"> LATE NIGHT FOOD</option>
+            </select>
+            <select
+              className="font-elite w-full h-auto min-h-[2.6em] rounded-[1em] text-center border-none bg-[#ffffffc3] text-[#643927aa] text-[0.95rem]"
+              value={selectedPlace}
+              onChange={(e) => {
+                setSelectedPlace(e.target.value);
+              }}
+            >
+              <option value="HOME SWEET HOME">HOME SWEET HOME</option>
+              <option value="SCHOOL">SCHOOL</option>
+              <option value="OFFICE">OFFICE</option>
+              <option value="CAFE">CAFE</option>
+              <option value="RESTAURANT">RESTAURANT</option>
+              <option value="OTHERS">OTHERS</option>
+            </select>
+          </div>
 
-          <div>
+          {/* Photo on the left, AI results land in the fields on the right */}
+          <div className="flex items-stretch justify-center gap-3 w-[24em] max-w-[95%] max-md:flex-col max-md:items-center">
             <input
               id="ImageUpload"
               type="file"
@@ -297,71 +278,74 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             />
             <label
               htmlFor="ImageUpload"
-              className="cursor-pointer block m-auto"
+              className="cursor-pointer block shrink-0"
             >
-              <div className="relative w-full max-w-[250px] aspect-square my-2.5 mx-auto flex flex-col items-center justify-center text-center border-2 border-dashed border-[#ccc] rounded-[20px] shadow-[0_4px_15px_rgba(0,0,0,0.1)] overflow-hidden bg-[whitesmoke] transition-all duration-300 cursor-pointer hover:bg-[rgba(246,236,209,0.845)] hover:-translate-y-0.5">
+              <div className="relative w-[200px] aspect-square flex flex-col items-center justify-center text-center border-2 border-dashed border-[#ccc] rounded-[20px] shadow-[0_4px_15px_rgba(0,0,0,0.1)] overflow-hidden bg-[whitesmoke] transition-all duration-300 cursor-pointer hover:bg-[rgba(246,236,209,0.845)] hover:-translate-y-0.5">
                 {file ? (
                   <img
-                    className="w-full h-auto"
+                    className="w-full h-full object-cover"
                     src={file}
                     alt="Image preview"
                   />
                 ) : (
-                  <div className="text-[#999] text-[0.9rem]">
-                    <span style={{ fontSize: "1.5rem" }}>📸</span>
-                    <p>Upload a Photo to Calculate</p>
+                  <div className="text-[#999] text-[0.8rem] px-2">
+                    <span style={{ fontSize: "1.4rem" }}>📸</span>
+                    <p className="m-0">Snap a photo, AI fills the macros!</p>
                   </div>
                 )}
                 {isLoading && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[rgba(255,243,176,0.88)] rounded-[20px] z-10">
-                    <div className="w-9 h-9 border-4 border-[#e0d5c0] border-t-brown rounded-full animate-spin [animation-duration:0.8s]"></div>
-                    <p className="m-0 text-[0.9rem] text-brown font-bold">
-                      Analyzing your calories...
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-[rgba(255,243,176,0.88)] rounded-[20px] z-10">
+                    <img
+                      src="ginger-cat-v2-windy.png"
+                      alt=""
+                      className="w-12 h-12 rounded-full object-cover object-top animate-pulse"
+                    />
+                    <p className="m-0 text-[0.75rem] text-brown font-bold px-1">
+                      Analyzing...
                     </p>
                   </div>
                 )}
               </div>
             </label>
+            <div className="flex flex-col justify-center gap-1.5 max-md:w-full">
+              {(
+                [
+                  ["Protein", selectedProtein, setSelectedProtein],
+                  ["Fat", selectedFat, setSelectedFat],
+                  ["Carbs", selectedCarbs, setSelectedCarbs],
+                ] as const
+              ).map(([name, value, setter]) => (
+                <label
+                  key={name}
+                  className="flex items-center justify-between gap-2 text-[0.9rem]"
+                >
+                  {name}(g):
+                  <input
+                    className="font-elite w-[5em] h-8 rounded-[1em] text-center border-none bg-white-glass text-brown-input font-bold"
+                    value={value}
+                    inputMode="decimal"
+                    onChange={(e) => setter(parseFloat(e.target.value) || 0)}
+                  />
+                </label>
+              ))}
+              <p className="m-0 text-[0.9rem] font-bold">
+                Total: {totalCalorie} kcal
+              </p>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: 10 }}>
-            <label>
-              Protein(g):
-              <input
-                className="font-elite w-[5em] max-w-[95%] h-8 rounded-[1em] text-center border-none bg-white-glass text-brown-input font-bold m-auto"
-                value={selectedProtein}
-                placeholder="Protein(g)"
-                onChange={(e) =>
-                  setSelectedProtein(parseFloat(e.target.value) || 0)
-                }
-              />
-            </label>
-            <label>
-              Fat(g):
-              <input
-                className="font-elite w-[5em] max-w-[95%] h-8 rounded-[1em] text-center border-none bg-white-glass text-brown-input font-bold m-auto"
-                value={selectedFat}
-                placeholder="Fat(g)"
-                onChange={(e) =>
-                  setSelectedFat(parseFloat(e.target.value) || 0)
-                }
-              />
-            </label>
-            <label>
-              Carbs(g):
-              <input
-                className="font-elite w-[5em] max-w-[95%] h-8 rounded-[1em] text-center border-none bg-white-glass text-brown-input font-bold m-auto"
-                value={selectedCarbs}
-                placeholder="Carbs(g)"
-                onChange={(e) =>
-                  setSelectedCarbs(parseFloat(e.target.value) || 0)
-                }
-              />
-            </label>
-          </div>
-          {/* <button onClick={handleCalorieCalculator}>Calculate Calories</button> */}
-          <h4>Your Total Calorie: {totalCalorie}</h4>
-          <button className="appearance-none inline-flex items-center justify-center min-w-[180px] h-10 min-h-[30px] p-0 rounded-lg border border-transparent text-[1em] font-medium text-black bg-white-soft cursor-pointer transition-all duration-[250ms] hover:font-bold hover:text-white hover:bg-[rgb(96,45,20)] hover:transition-none">
-            Submit
+
+          <textarea
+            className="font-elite shrink-0 w-[24em] max-w-[95%] h-auto min-h-[4.5em] rounded-[1em] text-center border-none bg-white-glass text-brown-input font-bold text-base"
+            value={inputValue}
+            placeholder="Write it down...🥨"
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+
+          <button
+            disabled={isLoading}
+            className="appearance-none inline-flex items-center justify-center min-w-[180px] h-10 min-h-[30px] p-0 rounded-lg border border-transparent text-[1em] font-medium text-black bg-white-soft cursor-pointer transition-all duration-250 hover:font-bold hover:text-white hover:bg-[rgb(96,45,20)] hover:transition-none disabled:opacity-60 disabled:cursor-wait"
+          >
+            {isLoading ? "Analyzing..." : "Submit"}
           </button>
         </form>
         <Toast message={toast} onClose={() => setToast(null)} />
