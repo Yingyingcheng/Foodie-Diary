@@ -28,8 +28,13 @@ function CalorieRing({ consumed, goal }: { consumed: number; goal: number }) {
   const normalizedRadius = radius - stroke / 2;
   const circumference = 2 * Math.PI * normalizedRadius;
   const remaining = Math.max(goal - consumed, 0);
-  const remainPct = goal > 0 ? Math.max(remaining / goal, 0) : 1;
-  const offset = circumference - remainPct * circumference;
+  // const remainPct = goal > 0 ? Math.max(remaining / goal, 0) : 1;
+  // const offset = circumference - remainPct * circumference;
+
+  // Hybrid style like MyFitnessPal: the ring FILLS with what you've eaten
+  // (full red ring when over budget), while the badge text counts DOWN
+  const filledPct = goal > 0 ? Math.min(consumed / goal, 1) : 0;
+  const offset = circumference - filledPct * circumference;
 
   let ringColor = "#4886a3";
   let catImage = "ginger-cat-v2-floof.webp"; // happy default, most of the day
