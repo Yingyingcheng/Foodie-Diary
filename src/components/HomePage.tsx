@@ -32,10 +32,15 @@ function CalorieRing({ consumed, goal }: { consumed: number; goal: number }) {
   const offset = circumference - remainPct * circumference;
 
   let ringColor = "#4886a3";
+  let catImage = "ginger-cat-v2-floof.webp"; // happy default, most of the day
   if (consumed > goal) {
     ringColor = "#e53935";
-  } else if (consumed / goal > 0.85) {
+    catImage = "ginger-cat-v2-grumpy.webp"; // matches red / "over!"
+  } else if (consumed / goal > 0.8) {
     ringColor = "#fb8c00";
+    catImage = "ginger-cat-fruit-lemon.webp"; // sour = careful, matches orange
+  } else if (consumed / goal > 0.5) {
+    catImage = "ginger-cat-fruit-avocado.webp"; // healthy midday progress
   }
 
   // Inner edge of the ring, so the cat portrait fits snugly inside it
@@ -48,7 +53,7 @@ function CalorieRing({ consumed, goal }: { consumed: number; goal: number }) {
         style={{ width: radius * 2, height: radius * 2 }}
       >
         <img
-          src="ginger-cat-v2-floof.png"
+          src={catImage}
           alt=""
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full object-cover object-top select-none transition-transform duration-300 group-hover:scale-105"
           style={{ width: innerDiameter, height: innerDiameter }}
@@ -84,14 +89,12 @@ function CalorieRing({ consumed, goal }: { consumed: number; goal: number }) {
           style={{ color: ringColor }}
         >
           {consumed > goal
-            ? `${consumed - goal} kcal over!`
-            : `${remaining} kcal left`}
+            ? `Oops, you're ${consumed - goal} kcal over!`
+            : `Hmm... ${remaining} kcal left`}
         </span>
       </div>
-      <p className="mt-3 text-[0.9rem] text-[#8a6040]">
-        {consumed > goal
-          ? `${consumed - goal} kcal over budget!`
-          : `${consumed} of ${goal} kcal eaten`}
+      <p className="mt-5 text-[0.9rem] text-[#8a6040]">
+        {`${consumed} of ${goal} kcal eaten`}
       </p>
     </div>
   );
@@ -305,10 +308,7 @@ function Dashboard({
 
 export function Home({ foods, dailyGoal, macroGoals }: HomeProps) {
   return (
-    <LayoutPage
-      title="JOURNAL WITH ME"
-      backgroundImage="url(avocado1.png)"
-    >
+    <LayoutPage title="JOURNAL WITH ME" backgroundImage="url(avocado1.webp)">
       <Dashboard foods={foods} dailyGoal={dailyGoal} macroGoals={macroGoals} />
     </LayoutPage>
   );

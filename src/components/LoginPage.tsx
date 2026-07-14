@@ -9,25 +9,25 @@ const catMoods: Record<
 > = {
   // Colors are sampled from each painting's backdrop
   meow: {
-    image: "ginger-cat-v2-meow.png",
+    image: "ginger-cat-v2-meow.webp",
     pageBg: "#bfe0dc",
     accent: "#177e72",
     caption: "MEOW! Welcome back, foodie friend!",
   },
   floof: {
-    image: "ginger-cat-v2-floof.png",
+    image: "ginger-cat-v2-floof.webp",
     pageBg: "#c3d0f0",
     accent: "#1e3f9e",
     caption: "A new foodie?! *floofs with excitement*",
   },
   grumpy: {
-    image: "ginger-cat-v2-grumpy.png",
+    image: "ginger-cat-v2-grumpy.webp",
     pageBg: "#c5e6f2",
     accent: "#4886a3",
     caption: "Hmph. That's not the right password...",
   },
   windy: {
-    image: "ginger-cat-v2-windy.png",
+    image: "ginger-cat-v2-windy.webp",
     pageBg: "#f2c4b3",
     accent: "#d8431f",
     caption: "Hold on... checking the pantry records...",
@@ -111,6 +111,9 @@ export function Login() {
         <img
           src={cat.image}
           alt="Ginger cat greeting you"
+          width={200}
+          height={200}
+          decoding="async"
           className="w-[200px] max-w-[80%] aspect-square object-cover object-top rounded-full border-4 shadow-md transition-all duration-500"
           style={{ borderColor: cat.accent }}
         />

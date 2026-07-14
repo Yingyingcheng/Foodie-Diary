@@ -50,11 +50,11 @@ export function Plan({
   return (
     <LayoutPage
       title="SET YOUR GOALS"
-      backgroundImage="url(peach5.png)"
+      backgroundImage="url(peach5.webp)"
     >
       <div className={planContainer}>
         <section className={`${planSection} bg-[rgb(255,243,224)]`}>
-          <CatBadge src="ginger-cat-fruit-peach.png" ringColor="#e08a4e" />
+          <CatBadge src="ginger-cat-fruit-peach.webp" ringColor="#e08a4e" />
           <h2 className={`${planSectionTitle} mt-3`}>Daily Calorie Target</h2>
           <form onSubmit={handleSave} className="flex flex-col gap-4">
             <div className="text-center">

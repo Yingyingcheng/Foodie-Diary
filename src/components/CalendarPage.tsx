@@ -124,7 +124,7 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
   return (
     <LayoutPage
       title="Calendar Memory"
-      backgroundImage="url(cherry1.png)"
+      backgroundImage="url(cherry1.webp)"
     >
       {/* Mobile-only backdrop */}
       {selectedDateKey && (
@@ -137,7 +137,7 @@ export function Calendar({ foods, setFoods, dailyGoal }: CalendarInputProps) {
       <div className="flex justify-center items-start gap-5 mt-[15px] max-md:flex-col max-md:items-center">
         {/* Calendar card */}
         <div className="w-full max-w-[550px] p-4 rounded-[20px] bg-[#fbf5f3]">
-          <CatBadge src="ginger-cat-fruit-cherry.png" ringColor="#c94f5e" />
+          <CatBadge src="ginger-cat-fruit-cherry.webp" ringColor="#c94f5e" />
           {/* Month navigation */}
           <h2 className="text-calendar-red font-bold text-2xl flex items-center justify-center gap-2 flex-nowrap text-center min-w-0">
             <button

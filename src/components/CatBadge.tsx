@@ -9,6 +9,9 @@ export function CatBadge({ src, ringColor }: CatBadgeProps) {
     <img
       src={src}
       alt=""
+      width={200}
+      height={200}
+      decoding="async"
       className="block mx-auto w-[200px] max-w-[80%] aspect-square rounded-full object-cover object-top border-2 shadow-md select-none"
       style={{ borderColor: ringColor }}
     />

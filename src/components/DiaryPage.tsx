@@ -62,7 +62,13 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     setFoods(editFoods);
     const updated = editFoods.find((f) => f.id === isEditingId);
     if (updated) {
-      await supabase.from("foods").update(updated).eq("id", isEditingId);
+      const { error } = await supabase
+        .from("foods")
+        .update(updated)
+        .eq("id", isEditingId);
+      if (error) {
+        setToast("Could not save your edit to cloud: " + error.message);
+      }
     }
   }
 
@@ -113,6 +119,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     setSelectedProtein(0);
     setSelectedFat(0);
     setSelectedCarbs(0);
+    if (file) URL.revokeObjectURL(file); // Clean up the preview memory
     setFile(null);
   }
 
@@ -125,12 +132,14 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
     if (!e.target.files || e.target.files.length === 0) return;
 
     const originalFile = e.target.files[0];
-    setFile(URL.createObjectURL(originalFile));
+    // One object URL shared by the preview and the analysis <img>;
+    // the preview keeps it until the form resets, so don't revoke it here
+    const previewUrl = URL.createObjectURL(originalFile);
+    setFile(previewUrl);
     setIsLoading(true); // Starts analyze
 
     const img = new Image();
-    img.src = URL.createObjectURL(originalFile);
-    // const reader = new FileReader();
+    img.src = previewUrl;
 
     img.onload = async () => {
       const canvas = document.createElement("canvas");
@@ -148,9 +157,10 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
       const ctx = canvas.getContext("2d");
       ctx?.drawImage(img, 0, 0, width, height);
 
-      // 3. Quality: 0.7 's JPEG Base64 : Vercel's 4.5MB limit
+      // 800px-wide JPEG at 0.8 quality is plenty for Gemini analysis
+      // and stays far below Vercel's 4.5MB request limit
       const compressedBase64 = canvas
-        .toDataURL("image/jpeg", 0.9)
+        .toDataURL("image/jpeg", 0.8)
         .split(",")[1];
 
       try {
@@ -203,14 +213,13 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
         }
       } finally {
         setIsLoading(false);
-        URL.revokeObjectURL(img.src); // Clean up memory
       }
     };
   }
 
   return (
     <>
-      <LayoutPage title="FOODIE DIARY" backgroundImage="url(lemon.png)">
+      <LayoutPage title="FOODIE DIARY" backgroundImage="url(lemon.webp)">
         <form
           className="max-w-[550px] mx-auto mt-[15px] p-8 pb-6 text-center rounded-[3em] bg-[#f2e6c9] text-olive-dark flex flex-col gap-[10px] items-center max-md:max-w-[92%] max-md:p-5 max-md:rounded-[2em]"
           onSubmit={(e) => {
@@ -225,7 +234,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
             handleResetForm();
           }}
         >
-          <CatBadge src="ginger-cat-v2-windy.png" ringColor="#d9a916" />
+          <CatBadge src="ginger-cat-v2-windy.webp" ringColor="#d9a916" />
 
           {/* Date + meal + place, kept compact in two rows */}
           <label>
@@ -296,7 +305,7 @@ export function Diary({ foods, setFoods }: DiaryInputProps) {
                 {isLoading && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-[rgba(255,243,176,0.88)] rounded-[20px] z-10">
                     <img
-                      src="ginger-cat-v2-windy.png"
+                      src="ginger-cat-v2-windy.webp"
                       alt=""
                       className="w-12 h-12 rounded-full object-cover object-top animate-pulse"
                     />
